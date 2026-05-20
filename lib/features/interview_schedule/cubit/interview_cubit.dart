@@ -12,7 +12,10 @@ class InterviewScheduleCubit extends Cubit<InterviewScheduleState> {
   final timeController = TextEditingController();
   final linkController = TextEditingController();
 final interviewerController = TextEditingController();
+<<<<<<< HEAD
 final emailController = TextEditingController();
+=======
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
   // ================= UPDATE TYPE =================
   void updateInterviewType(String type) {
     emit(state.copyWith(interviewType: type));
@@ -178,7 +181,10 @@ final emailController = TextEditingController();
     timeController.dispose();
     linkController.dispose();
       interviewerController.dispose();
+<<<<<<< HEAD
         emailController.dispose();
+=======
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
     return super.close();
   }
 }

@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opsento_ats/core/constants/app_colors.dart';
 import 'package:opsento_ats/features/feed_back/cubit/feed_back_cubit.dart';
 import 'package:opsento_ats/features/feed_back/state/feed_back_state.dart';
+<<<<<<< HEAD
 import 'package:opsento_ats/features/offer_approv/presetion/offere_screen.dart';
 import 'package:opsento_ats/features/offer_later/presentaion/offer_later_page.dart';
+=======
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
 class InterviewFeedbackPage extends StatelessWidget {
   const InterviewFeedbackPage({super.key});
@@ -31,9 +34,15 @@ class InterviewFeedbackPage extends StatelessWidget {
       child: BlocConsumer<InterviewFeedbackCubit, InterviewFeedbackState>(
         listener: (context, state) {
           if (state.success) {
+<<<<<<< HEAD
             // ScaffoldMessenger.of(context).showSnackBar(
             //   const SnackBar(content: Text("Feedback Submitted")),
             // );
+=======
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Feedback Submitted")),
+            );
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
           }
         },
         builder: (context, state) {
@@ -237,6 +246,7 @@ class InterviewFeedbackPage extends StatelessWidget {
           const SizedBox(height: 20),
 
           /// ================= SUBMIT =================
+<<<<<<< HEAD
           SizedBox(
             width: double.infinity,
             height: 50,
@@ -282,6 +292,35 @@ class InterviewFeedbackPage extends StatelessWidget {
                   : Text("Submit Round ${round + 1} Feedback"),
             ),
           )
+=======
+         SizedBox(
+  width: double.infinity,
+  height: 50,
+  child: ElevatedButton(
+    onPressed: state.isSubmitting
+        ? null
+        : () => cubit.submit(round),
+    style: ElevatedButton.styleFrom(
+      backgroundColor: AppColors.secondary, // button color
+      foregroundColor: Colors.white,
+       shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),        // text + icon color
+    ),
+    child: state.isSubmitting
+        ? const SizedBox(
+            height: 22,
+            width: 22,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: Colors.white,
+              
+            ),
+          )
+        : Text("Submit Round ${round + 1} Feedback"),
+  ),
+)
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
         ],
       ),
     );

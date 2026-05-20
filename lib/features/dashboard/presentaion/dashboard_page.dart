@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+<<<<<<< HEAD
 import 'package:opsento_ats/core/constants/app_colors.dart';
 import 'package:opsento_ats/features/notification/presention/notification_page.dart';
 import 'package:opsento_ats/features/profile/presentation/profile_page.dart';
+=======
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
 import '../cubit/dashboard_cubit.dart';
 import '../state/dashboard_state.dart';
@@ -29,16 +32,24 @@ class DashboardPage extends StatelessWidget {
                     children: [
                       // TOP BAR
                       Row(
+<<<<<<< HEAD
                         children: [
                           const CircleAvatar(radius: 24),
                           const SizedBox(width: 12),
                           const Text(
+=======
+                        children: const [
+                          CircleAvatar(radius: 24),
+                          SizedBox(width: 12),
+                          Text(
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
                             "Dashboard",
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+<<<<<<< HEAD
                           const Spacer(),
                           IconButton(
                             icon: const Icon(Icons.notifications_none, size: 28),
@@ -60,15 +71,26 @@ class DashboardPage extends StatelessWidget {
                               );
                             },
                           ),
+=======
+                          Spacer(),
+                          Icon(Icons.notifications_none, size: 30),
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
                         ],
                       ),
 
                       const SizedBox(height: 20),
 
+<<<<<<< HEAD
                       // const Text(
                       //   "Tuesday, 14 May 2024",
                       //   style: TextStyle(color: Colors.grey),
                       // ),
+=======
+                      const Text(
+                        "Tuesday, 14 May 2024",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
                       const SizedBox(height: 25),
 
@@ -136,11 +158,16 @@ class DashboardPage extends StatelessWidget {
                         const Center(child: CircularProgressIndicator())
                       else
                         SizedBox(
+<<<<<<< HEAD
                           height: 220,
+=======
+                          height: 160,
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
                           child: Row(
                             mainAxisAlignment:
                                 MainAxisAlignment.spaceAround,
                             crossAxisAlignment: CrossAxisAlignment.end,
+<<<<<<< HEAD
                             children: [
     //                           children: state.chartValues
     // .map((h) => _ChartBar(height: h))
@@ -171,6 +198,11 @@ class DashboardPage extends StatelessWidget {
     label: "Hired",
   ),
 ],
+=======
+                            children: state.chartValues
+                                .map((h) => _ChartBar(height: h))
+                                .toList(),
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
                           ),
                         ),
 
@@ -192,6 +224,7 @@ class DashboardPage extends StatelessWidget {
   }
 }
 class _ChartBar extends StatelessWidget {
+<<<<<<< HEAD
   // final double height;
   final double percentage;
 
@@ -255,6 +288,29 @@ height: 140 * (percentage / 100),            decoration: BoxDecoration(
           ),
         ),
       ],
+=======
+  final double height;
+
+  const _ChartBar({super.key, required this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 30,
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.deepPurple.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        height: height * 0.6,
+        decoration: BoxDecoration(
+          color: Colors.deepPurple,
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
     );
   }
 }
@@ -307,7 +363,10 @@ Widget build(BuildContext context) {
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
       color: Colors.white,
+<<<<<<< HEAD
       border: Border.all(color: Colors.grey.shade300),
+=======
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
       borderRadius: BorderRadius.circular(18),
       boxShadow: [
         BoxShadow(
@@ -341,7 +400,11 @@ Widget build(BuildContext context) {
               Text(
                 "$count",
                 style: const TextStyle(
+<<<<<<< HEAD
                   fontSize: 25,
+=======
+                  fontSize: 28,
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
                   fontWeight: FontWeight.bold,
                 ),
               ),

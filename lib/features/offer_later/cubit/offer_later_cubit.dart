@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 import 'dart:typed_data';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opsento_ats/features/offer_later/state/offer_later_state.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+=======
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opsento_ats/features/offer_later/state/offer_later_state.dart';
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
 class OfferLetterCubit extends Cubit<OfferLetterState> {
   OfferLetterCubit() : super(OfferLetterState());
@@ -24,7 +29,11 @@ class OfferLetterCubit extends Cubit<OfferLetterState> {
     emit(state.copyWith(joiningDate: value));
   }
 
+<<<<<<< HEAD
   Future<void> generateOffer() async {
+=======
+  void generateOffer() {
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
     final offer = """
 🎉 OFFER LETTER
 
@@ -38,6 +47,7 @@ Joining Date: ${state.joiningDate}
 We welcome you to our organization.
 """;
 
+<<<<<<< HEAD
     final pdfBytes = await _buildOfferPdf(offer);
 
     emit(state.copyWith(
@@ -77,4 +87,11 @@ We welcome you to our organization.
 
     return doc.save();
   }
+=======
+    emit(state.copyWith(
+      isGenerated: true,
+      offerText: offer,
+    ));
+  }
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 }

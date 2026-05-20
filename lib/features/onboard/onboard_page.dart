@@ -84,7 +84,11 @@ class OnboardPage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
 
                     backgroundColor:
+<<<<<<< HEAD
                         AppColors.secondary,
+=======
+                        AppColors.primary,
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
                     shape: RoundedRectangleBorder(
                       borderRadius:
@@ -108,6 +112,7 @@ class OnboardPage extends StatelessWidget {
               const SizedBox(height: 28),
 
               // SIGNUP
+<<<<<<< HEAD
             const SizedBox(height: 35),
 
 Row(
@@ -144,6 +149,43 @@ Row(
     ),
   ],
 ),
+=======
+              Row(
+
+                mainAxisAlignment:
+                    MainAxisAlignment.center,
+
+                children: [
+
+                  const Text(
+
+                    "Don't have an account? ",
+
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54,
+                    ),
+                  ),
+
+                  GestureDetector(
+
+                    onTap: () {},
+
+                    child: const Text(
+
+                      "Sign up",
+
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF4B2EFF),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
               const SizedBox(height: 40),
             ],
           ),

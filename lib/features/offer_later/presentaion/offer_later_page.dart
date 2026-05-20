@@ -1,10 +1,16 @@
+<<<<<<< HEAD
 import 'dart:typed_data';
 
+=======
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opsento_ats/features/offer_later/cubit/offer_later_cubit.dart';
 import 'package:opsento_ats/features/offer_later/state/offer_later_state.dart';
+<<<<<<< HEAD
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+=======
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
 class OfferLetterPage extends StatelessWidget {
   const OfferLetterPage({super.key});
@@ -95,9 +101,13 @@ class OfferLetterPage extends StatelessWidget {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
+<<<<<<< HEAD
                       onPressed: () async {
                         await cubit.generateOffer();
                       },
+=======
+                      onPressed: cubit.generateOffer,
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                         foregroundColor: Colors.white,
@@ -108,6 +118,7 @@ class OfferLetterPage extends StatelessWidget {
                       child: const Text("Generate Offer Letter"),
                     ),
                   ),
+<<<<<<< HEAD
 
                   if (state.isGenerated && state.offerPdfBytes != null) ...[
                     const SizedBox(height: 16),
@@ -135,6 +146,8 @@ class OfferLetterPage extends StatelessWidget {
                       ),
                     ),
                   ],
+=======
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
                 ],
               ),
             ),
@@ -143,6 +156,7 @@ class OfferLetterPage extends StatelessWidget {
       ),
     );
   }
+<<<<<<< HEAD
 }
 
 class OfferLetterPdfPreviewPage extends StatelessWidget {
@@ -163,3 +177,6 @@ class OfferLetterPdfPreviewPage extends StatelessWidget {
     );
   }
 }
+=======
+}
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc

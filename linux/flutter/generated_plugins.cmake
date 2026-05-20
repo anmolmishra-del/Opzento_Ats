@@ -3,9 +3,13 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+<<<<<<< HEAD
   flutter_secure_storage_linux
   open_file_linux
   printing
+=======
+  open_file_linux
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
   syncfusion_pdfviewer_linux
   url_launcher_linux
 )

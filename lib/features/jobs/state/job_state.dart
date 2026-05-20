@@ -48,9 +48,13 @@ class JobData {
 
   final String salary;
   final String type;
+<<<<<<< HEAD
  final List<String> primarySkills;
 
   final List<String> secondarySkills;
+=======
+
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
   final String status;
 
   final int newCount;
@@ -70,9 +74,13 @@ class JobData {
     required this.department,
 
     required this.experience,
+<<<<<<< HEAD
     required this.primarySkills,
 
     required this.secondarySkills,
+=======
+
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
     required this.location,
 
     required this.salary,

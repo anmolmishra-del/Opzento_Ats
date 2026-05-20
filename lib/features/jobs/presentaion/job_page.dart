@@ -164,7 +164,10 @@ Row(
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(14),
+<<<<<<< HEAD
                                 border: Border.all(color: Colors.grey.shade300),
+=======
+>>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.grey.shade200,
