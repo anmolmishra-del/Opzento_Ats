@@ -1,0 +1,75 @@
+enum EditProfileStatus {
+  initial,
+  loading,
+  success,
+  error,
+}
+
+class EditProfileState {
+
+  final String name;
+  final String role;
+  final String email;
+  final String phone;
+  final String location;
+  final String company;
+  final String designation;
+  final String website;
+
+  final EditProfileStatus status;
+  final String message;
+
+  const EditProfileState({
+
+    this.name = '',
+    this.role = '',
+    this.email = '',
+    this.phone = '',
+    this.location = '',
+    this.company = '',
+    this.designation = '',
+    this.website = '',
+
+    this.status =
+        EditProfileStatus.initial,
+
+    this.message = '',
+  });
+
+  EditProfileState copyWith({
+
+    String? name,
+    String? role,
+    String? email,
+    String? phone,
+    String? location,
+    String? company,
+    String? designation,
+    String? website,
+
+    EditProfileStatus? status,
+    String? message,
+  }) {
+
+    return EditProfileState(
+
+      name: name ?? this.name,
+      role: role ?? this.role,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      location:
+          location ?? this.location,
+      company:
+          company ?? this.company,
+      designation:
+          designation ??
+              this.designation,
+      website:
+          website ?? this.website,
+
+      status: status ?? this.status,
+      message:
+          message ?? this.message,
+    );
+  }
+}
