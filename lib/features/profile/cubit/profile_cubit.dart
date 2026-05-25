@@ -14,50 +14,135 @@ class RecruiterProfileCubit
   }
 
   final service = OdooService();
+Future<void> getProfile() async {
 
-  // GET PROFILE
-  Future<void> getProfile() async {
+  try {
+ if (isClosed) return;
+    /// LOADING START
+    emit(
+      state.copyWith(
+        isLoading: true,
+      ),
+    );
+
+    /// PROFILE
+    final profile =
+        await service.getProfile();
+
+    /// DASHBOARD STATS
+    final stats =
+        await service
+            .getDashboardStats();
+
+    print(
+      "STATS => $stats",
+    );
+ if (isClosed) return;
+    /// FINAL STATE UPDATE
+    emit(
+      state.copyWith(
+
+        // PROFILE
+        name: profile.name,
+
+        email: profile.email,
+
+        phone: profile.mobile,
+
+        role: profile.role,
+
+        location:
+            profile.location,
+
+        memberSince:
+            profile.memberSince,
+
+        company:
+            profile.company,
+
+        designation:
+            profile.job_title,
+    image:
+        profile.image ?? '',
+        website:
+            profile.website,
+
+        // STATS
+        jobsPosted:
+            stats['jobsPosted'] ?? 0,
+
+        totalApplicants:
+            stats['applicants'] ?? 0,
+
+        hired:
+            stats['hired'] ?? 0,
+
+        profileViews:
+            stats['views']
+                .toString(),
+
+        // LOADING END
+        isLoading: false,
+      ),
+    );
+
+  } catch (e) {
+
+    print(
+      "PROFILE ERROR",
+    );
+
+    print(e);
+
+    emit(
+      state.copyWith(
+        isLoading: false,
+      ),
+    );
+  }
+}
+  // UPDATE PROFILE
+  Future<void> updateProfile({
+
+    required String name,
+    required String role,
+    required String email,
+    required String phone,
+    required String location,
+ required String company,
+  required String designation,
+  required String website,
+  }) async {
 
     try {
+   emit(
+      state.copyWith(
+        isLoading: true,
+      ),
+    );
 
-      final response =
-          await service.getProfile();
+      // ODOO UPDATE
+      await service.updateProfile(
 
-      print(response);
+        name: name,
+        email: email,
+        phone: phone,
+      );
 
-      final data = response[0];
-
+      // LOCAL STATE UPDATE
       emit(
         state.copyWith(
 
-          name:
-              data['name'] ?? "",
+          name: name,
 
-          email:
-              data['email'] ?? "",
+          role: role,
 
-          phone:
-              data['phone'] ?? "",
+          email: email,
 
-          role:
-              "Recruiter",
+          phone: phone,
 
-          location:
-              "",
-
-          memberSince:
-              data['create_date'] ?? "",
-
-          company:
-              data['company_id'] != null
-                  ? data['company_id'][1]
-                  : "",
-
-          designation:
-              "",
-
-          website:
-              "",
+          location: location,
+             isLoading: false,
         ),
       );
 
@@ -65,32 +150,5 @@ class RecruiterProfileCubit
 
       print(e);
     }
-  }
-
-  // UPDATE PROFILE
-  void updateProfile({
-
-    required String name,
-    required String role,
-    required String email,
-    required String phone,
-    required String location,
-
-  }) {
-
-    emit(
-      state.copyWith(
-
-        name: name,
-
-        role: role,
-
-        email: email,
-
-        phone: phone,
-
-        location: location,
-      ),
-    );
   }
 }

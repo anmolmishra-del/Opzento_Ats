@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-<<<<<<< HEAD
 import 'package:opsento_ats/core/constants/app_colors.dart';
 import 'package:opsento_ats/features/notification/presention/notification_page.dart';
 import 'package:opsento_ats/features/profile/presentation/profile_page.dart';
-=======
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
 import '../cubit/dashboard_cubit.dart';
 import '../state/dashboard_state.dart';
@@ -32,24 +29,34 @@ class DashboardPage extends StatelessWidget {
                     children: [
                       // TOP BAR
                       Row(
-<<<<<<< HEAD
                         children: [
                           const CircleAvatar(radius: 24),
                           const SizedBox(width: 12),
-                          const Text(
-=======
-                        children: const [
-                          CircleAvatar(radius: 24),
-                          SizedBox(width: 12),
-                          Text(
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
-                            "Dashboard",
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
+                          Column(
+  crossAxisAlignment:
+      CrossAxisAlignment.start,
+  children: [
+
+    Text(
+      "Hello",
+      style: TextStyle(
+        color: Colors.grey,
+      ),
+    ),
+
+    Text(
+                            state.name,
+
+                            style:
+                                const TextStyle(
+                              fontSize: 16,
+
+                              fontWeight:
+                                  FontWeight.w500,
                             ),
                           ),
-<<<<<<< HEAD
+  ],
+),
                           const Spacer(),
                           IconButton(
                             icon: const Icon(Icons.notifications_none, size: 28),
@@ -71,55 +78,76 @@ class DashboardPage extends StatelessWidget {
                               );
                             },
                           ),
-=======
-                          Spacer(),
-                          Icon(Icons.notifications_none, size: 30),
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
                         ],
                       ),
 
                       const SizedBox(height: 20),
 
-<<<<<<< HEAD
                       // const Text(
                       //   "Tuesday, 14 May 2024",
                       //   style: TextStyle(color: Colors.grey),
                       // ),
-=======
-                      const Text(
-                        "Tuesday, 14 May 2024",
-                        style: TextStyle(color: Colors.grey),
-                      ),
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
                       const SizedBox(height: 25),
 
                       // ERROR UI
-                      if (state.error != null)
-                        Text(
-                          state.error!,
-                          style: const TextStyle(color: Colors.red),
-                        ),
-
+                      // if (state.error != null)
+              if (state.error != null)
+  Text(
+    state.error!,
+    style: const TextStyle(
+      color: Colors.red,
+    ),
+  ),
                       // GRID
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: state.titles.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 1.6,
-                        ),
-                        itemBuilder: (context, index) {
-                          return _Card(
-                            title: state.titles[index],
-                            count: state.counts[index],
-                          );
-                        },
-                      ),
+                     SizedBox(
+
+  // height: 140,
+
+  child: GridView.builder(
+
+    shrinkWrap: true,
+
+    physics:
+        const NeverScrollableScrollPhysics(),
+
+    itemCount:
+        state.titles.length,
+
+    gridDelegate:
+        const SliverGridDelegateWithFixedCrossAxisCount(
+
+      crossAxisCount: 2,
+
+      crossAxisSpacing: 16,
+
+      mainAxisSpacing: 16,
+
+      childAspectRatio: 1.4,
+    ),
+
+    itemBuilder:
+        (context, index) {
+
+      return _Card(
+
+        title:
+            state.titles[index],
+
+        count:
+
+            state.counts.isNotEmpty &&
+
+                    index <
+                        state.counts.length
+
+                ? state.counts[index]
+
+                : 0,
+      );
+    },
+  ),
+),
 
                       const SizedBox(height: 20),
 
@@ -158,51 +186,42 @@ class DashboardPage extends StatelessWidget {
                         const Center(child: CircularProgressIndicator())
                       else
                         SizedBox(
-<<<<<<< HEAD
                           height: 220,
-=======
-                          height: 160,
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
                           child: Row(
                             mainAxisAlignment:
                                 MainAxisAlignment.spaceAround,
                             crossAxisAlignment: CrossAxisAlignment.end,
-<<<<<<< HEAD
-                            children: [
-    //                           children: state.chartValues
-    // .map((h) => _ChartBar(height: h))
-    // .toList(),
+                            children:
+    state.chartValues
+        .asMap()
+        .entries
+        .map((entry) {
 
-  _ChartBar(
-    percentage: 90,
-    label: "Applied",
-  ),
+  final labels = [
 
-  _ChartBar(
-    percentage: 70,
-    label: "Screening",
-  ),
+    "Applied",
 
-  _ChartBar(
-    percentage: 55,
-    label: "Interview",
-  ),
+    "Screening",
 
-  _ChartBar(
-    percentage: 35,
-    label: "Offer",
-  ),
+    "Interview",
 
-  _ChartBar(
-    percentage: 20,
-    label: "Hired",
-  ),
-],
-=======
-                            children: state.chartValues
-                                .map((h) => _ChartBar(height: h))
-                                .toList(),
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
+    "Offer",
+
+    "Hired",
+  ];
+
+  return _ChartBar(
+
+    value:
+        entry.value,
+
+  label:
+    entry.key < labels.length
+        ? labels[entry.key]
+        : "Unknown",
+  );
+
+}).toList(),
                           ),
                         ),
 
@@ -224,13 +243,12 @@ class DashboardPage extends StatelessWidget {
   }
 }
 class _ChartBar extends StatelessWidget {
-<<<<<<< HEAD
   // final double height;
-  final double percentage;
+  final double value;
 
   final String label;
   const _ChartBar({super.key, 
-    required this.percentage,
+    required this.value,
 
     required this.label,});
 
@@ -254,7 +272,10 @@ class _ChartBar extends StatelessWidget {
           ),
           alignment: Alignment.bottomCenter,
           child: Container(
-height: 140 * (percentage / 100),            decoration: BoxDecoration(
+height: value <= 0
+    ? 5
+    : value * 3,
+               decoration: BoxDecoration(
               color: AppColors.secondary,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: Colors.grey.shade600)
@@ -266,7 +287,7 @@ height: 140 * (percentage / 100),            decoration: BoxDecoration(
         /// PERCENTAGE
         Text(
 
-          "${percentage.toInt()}%",
+          "${value.toInt()}",
 
           style: const TextStyle(
 
@@ -288,29 +309,6 @@ height: 140 * (percentage / 100),            decoration: BoxDecoration(
           ),
         ),
       ],
-=======
-  final double height;
-
-  const _ChartBar({super.key, required this.height});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 30,
-      height: height,
-      decoration: BoxDecoration(
-        color: Colors.deepPurple.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        height: height * 0.6,
-        decoration: BoxDecoration(
-          color: Colors.deepPurple,
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
     );
   }
 }
@@ -363,10 +361,7 @@ Widget build(BuildContext context) {
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
       color: Colors.white,
-<<<<<<< HEAD
       border: Border.all(color: Colors.grey.shade300),
-=======
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
       borderRadius: BorderRadius.circular(18),
       boxShadow: [
         BoxShadow(
@@ -375,43 +370,66 @@ Widget build(BuildContext context) {
         ),
       ],
     ),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    child: Column(
+
+  crossAxisAlignment:
+      CrossAxisAlignment.start,
+
+  children: [
+
+    /// TITLE
+    Text(
+
+      title,
+
+      style: const TextStyle(
+
+        fontSize: 14,
+
+        fontWeight:
+            FontWeight.w500,
+      ),
+
+      maxLines: 2,
+
+      overflow:
+          TextOverflow.ellipsis,
+    ),
+
+    const Spacer(),
+
+    /// ICON + NUMBER
+    Row(
+
       children: [
-        // ICON
-        Center(child: Icon(getIcon(), color: getColor(), size: 32)),
 
-        const SizedBox(width: 12),
+        Icon(
 
-        // TEXT SECTION
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center, // 👈 vertical center
-            children: [
-              Text(
-                title,
-                style: const TextStyle(fontSize: 14),
-                overflow: TextOverflow.ellipsis,
-              ),
+          getIcon(),
 
-              const SizedBox(height: 6),
+          color: getColor(),
 
-              Text(
-                "$count",
-                style: const TextStyle(
-<<<<<<< HEAD
-                  fontSize: 25,
-=======
-                  fontSize: 28,
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+          size: 30,
+        ),
+
+        const SizedBox(width: 10),
+
+        Text(
+
+          "$count",
+
+          style:
+              const TextStyle(
+
+            fontSize: 28,
+
+            fontWeight:
+                FontWeight.bold,
           ),
         ),
       ],
     ),
+  ],
+),
   );
 }}

@@ -5,7 +5,7 @@ class RecruiterProfileState {
   final String email;
   final String phone;
   final String location;
-
+  final String image;
   final int jobsPosted;
   final int totalApplicants;
   final int hired;
@@ -25,7 +25,7 @@ class RecruiterProfileState {
     required this.email,
     required this.phone,
     required this.location,
-
+    required this.image,  
     required this.jobsPosted,
     required this.totalApplicants,
     required this.hired,
@@ -38,41 +38,41 @@ class RecruiterProfileState {
     required this.designation,
     required this.website,
   });
+factory RecruiterProfileState.initial() {
 
-  factory RecruiterProfileState.initial() {
+  return const RecruiterProfileState(
 
-    return const RecruiterProfileState(
+    name: "",
 
-      name: "Rohit Verma",
+    role: "",
 
-      role: "Recruiter",
+    email: "",
 
-      email: "rohit.verma@opsento.com",
+    phone: "",
 
-      phone: "+91 98765 43210",
+    location: "",
 
-      location: "Bangalore, India",
+    jobsPosted: 0,
 
-      jobsPosted: 68,
+    totalApplicants: 0,
 
-      totalApplicants: 232,
+    hired: 0,
 
-      hired: 45,
+    profileViews: "",
 
-      profileViews: "12.5K",
+    about: "",
 
-      about:
-          "Experienced recruiter with a passion for connecting great talent with the right opportunities.",
+    memberSince: "",
 
-      memberSince: "May 2023",
+    company: "",
 
-      company: "Opsento Solutions",
+    designation: "",
 
-      designation: "Senior Recruiter",
+    website: "",
 
-      website: "www.opsento.com",
-    );
-  }
+    image: "",
+  );
+}
 
   RecruiterProfileState copyWith({
 
@@ -93,6 +93,8 @@ class RecruiterProfileState {
     String? company,
     String? designation,
     String? website,
+    String? image,
+    bool? isLoading,
   }) {
 
     return RecruiterProfileState(
@@ -106,7 +108,7 @@ class RecruiterProfileState {
       phone: phone ?? this.phone,
 
       location: location ?? this.location,
-
+image: image ?? this.image,
       jobsPosted:
           jobsPosted ?? this.jobsPosted,
 

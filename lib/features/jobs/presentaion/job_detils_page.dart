@@ -473,7 +473,6 @@ final bool isRecruiter;
                                 ],
                               ),
          ),
-<<<<<<< HEAD
          const SizedBox(height: 10),
 
 /// PRIMARY SKILLS
@@ -573,8 +572,6 @@ Container(
     ],
   ),
 ),
-=======
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
                   const SizedBox(height: 20),
 Padding(
   padding: const EdgeInsets.only(left: 50),
@@ -859,11 +856,7 @@ Padding(
         children: [
 
           const Text(
-<<<<<<< HEAD
             " ",
-=======
-            "• ",
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
             style: TextStyle(
               color: Colors.deepPurple,
@@ -990,7 +983,6 @@ Padding(
     ),
   );
 }
-<<<<<<< HEAD
 }Widget _skillChip(
 
   String text,
@@ -1027,6 +1019,4 @@ Padding(
       ),
     ),
   );
-=======
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 }

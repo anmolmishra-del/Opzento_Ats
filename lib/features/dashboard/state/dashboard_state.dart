@@ -7,33 +7,49 @@ class DashboardState {
   final List<String> titles;
   final List<int> counts;
   final List<double> chartValues;
-
-  const DashboardState({
+final String name;  
+const DashboardState({
     required this.isLoading,
     required this.error,
     required this.selectedFilter,
     required this.titles,
     required this.counts,
     required this.chartValues,
+    required this.name,
   });
 
   factory DashboardState.initial() {
-    return const DashboardState(
-      isLoading: false,
-      error: null,
-      selectedFilter: "This Month",
-      titles: [
-        "Open Positions",
-        "New Applications",
-        "Interviews Today",
-        "Offers Pending",
-        "Hired This Month",
-        "Rejected",
-      ],
-      counts: [24, 128, 8, 5, 12, 18],
-      chartValues: [120, 70, 80, 60, 75],
-    );
-  }
+    return  DashboardState(
+name: "",
+  isLoading: false,
+
+  error: null,
+
+  selectedFilter: "This Month",
+
+  titles: [
+
+    "Open Positions",
+
+    "New Applications",
+
+    "Interviews Today",
+
+    "Offers Pending",
+
+    "Hired This Month",
+      "Rejected",
+  ],
+
+  counts: [
+
+  ],
+
+  chartValues: [
+
+ 
+  ],
+); }
 
   DashboardState copyWith({
     bool? isLoading,
@@ -42,8 +58,11 @@ class DashboardState {
     List<String>? titles,
     List<int>? counts,
     List<double>? chartValues,
+    String? name,
   }) {
     return DashboardState(
+      name:
+    name ?? this.name,
       isLoading: isLoading ?? this.isLoading,
       error: error,
       selectedFilter: selectedFilter ?? this.selectedFilter,

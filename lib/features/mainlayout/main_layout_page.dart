@@ -1,16 +1,8 @@
 // import 'package:flutter/material.dart';
-<<<<<<< HEAD
 // import 'package:opsento_ats/features/candidatefolder/candidate/presentaion/candidate_page.dart';
 // import 'package:opsento_ats/features/candidatefolder/candidate_screen/presentaion/candidate_page.dart';
 // import 'package:opsento_ats/features/dashboard/presentaion/dashboard_page.dart';
 // import 'package:opsento_ats/features/interview_schedule/presention/interview_page.dart';
-=======
-// import 'package:opsento_ats/features/candidate/presentaion/candidate_page.dart';
-// import 'package:opsento_ats/features/candidate_screen/presentaion/candidate_page.dart';
-// import 'package:opsento_ats/features/dashboard/presentaion/dashboard_page.dart';
-// import 'package:opsento_ats/features/interview_schedule/presention/interview_page.dart';
-// import 'package:opsento_ats/features/jobs/presentaion/job_page.dart';
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 // import 'package:opsento_ats/features/my_applications/presentaion/my_appication_page.dart';
 
 // class MainLayout extends StatefulWidget {

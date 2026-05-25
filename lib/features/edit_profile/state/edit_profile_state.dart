@@ -10,11 +10,13 @@ class EditProfileState {
   final String name;
   final String role;
   final String email;
-  final String phone;
+  final String mobile;
   final String location;
   final String company;
   final String designation;
   final String website;
+
+  final bool hasChanges;
 
   final EditProfileStatus status;
   final String message;
@@ -24,11 +26,13 @@ class EditProfileState {
     this.name = '',
     this.role = '',
     this.email = '',
-    this.phone = '',
+    this.mobile = '',
     this.location = '',
     this.company = '',
     this.designation = '',
     this.website = '',
+
+    this.hasChanges = false,
 
     this.status =
         EditProfileStatus.initial,
@@ -41,11 +45,13 @@ class EditProfileState {
     String? name,
     String? role,
     String? email,
-    String? phone,
+    String? mobile,
     String? location,
     String? company,
     String? designation,
     String? website,
+
+    bool? hasChanges,
 
     EditProfileStatus? status,
     String? message,
@@ -54,20 +60,33 @@ class EditProfileState {
     return EditProfileState(
 
       name: name ?? this.name,
+
       role: role ?? this.role,
+
       email: email ?? this.email,
-      phone: phone ?? this.phone,
+
+      mobile: mobile ?? this.mobile,
+
       location:
           location ?? this.location,
+
       company:
           company ?? this.company,
+
       designation:
           designation ??
               this.designation,
+
       website:
           website ?? this.website,
 
-      status: status ?? this.status,
+      hasChanges:
+          hasChanges ??
+              this.hasChanges,
+
+      status:
+          status ?? this.status,
+
       message:
           message ?? this.message,
     );

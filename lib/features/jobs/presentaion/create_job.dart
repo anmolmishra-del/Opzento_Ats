@@ -27,14 +27,11 @@ class _CreateJobPageState
   final sal = TextEditingController();
 final stat = TextEditingController();
 final count = TextEditingController();
-<<<<<<< HEAD
 final primarySkills =
     TextEditingController();
 
 final secondarySkills =
     TextEditingController();
-=======
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
   // NEW CONTROLLERS
   final description =
       TextEditingController();
@@ -104,7 +101,6 @@ final secondarySkills =
                       border: OutlineInputBorder(),
                     ),
                   ),
-<<<<<<< HEAD
                   const SizedBox(height: 16),
 
 /// PRIMARY SKILLS
@@ -146,8 +142,6 @@ TextField(
         OutlineInputBorder(),
   ),
 ),
-=======
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
                   const SizedBox(height: 12),
 
@@ -312,7 +306,6 @@ TextField(
                                 loc.text,
                             salary: sal.text,
                             type: type,
-<<<<<<< HEAD
                             primarySkills:
     primarySkills.text
         .split(","),
@@ -320,8 +313,6 @@ TextField(
 secondarySkills:
     secondarySkills.text
         .split(","),
-=======
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
                        status: stat.text,
 newCount: int.parse(count.text),

@@ -101,6 +101,6 @@ class InterviewFeedbackCubit extends Cubit<InterviewFeedbackState> {
 
       comment.trim().isNotEmpty;
 }
+}
 
-
-  bool canSubmit(int round, InterviewFeedbackState state) {}}
+  // bool canSubmit(int round, InterviewFeedbackState state) {}}

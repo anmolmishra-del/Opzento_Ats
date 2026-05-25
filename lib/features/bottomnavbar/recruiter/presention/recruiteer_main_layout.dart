@@ -2,17 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:opsento_ats/features/candidatefolder/candidate/presentaion/candidate_page.dart';
 
 import 'package:opsento_ats/features/dashboard/presentaion/dashboard_page.dart';
-<<<<<<< HEAD
 import 'package:opsento_ats/features/feed_back/presentaion/feed_back_page.dart';
 import 'package:opsento_ats/features/jobs/presentaion/job_page.dart';
 import 'package:opsento_ats/features/offer_approv/presetion/offere_screen.dart';
 import 'package:opsento_ats/features/offer_later/presentaion/offer_later_page.dart';
-=======
-import 'package:opsento_ats/features/jobs/presentaion/job_page.dart';
-import 'package:opsento_ats/features/interview_schedule/presention/interview_page.dart';
-import 'package:opsento_ats/features/my_applications/presentaion/my_appication_page.dart';
-import 'package:opsento_ats/features/recruiter/presentaion/recruiter_page.dart';
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
 class RecruiterMainLayout
     extends StatefulWidget {
@@ -34,7 +27,6 @@ class _RecruiterMainLayoutState
 
   final List<Widget> pages = [
 
-<<<<<<< HEAD
     DashboardPage(),
     JobPage(isRecruiter: true,),
     CandidatePage(),
@@ -47,18 +39,6 @@ class _RecruiterMainLayoutState
 // RecruiterProfilePage(),
      
       // OfferLetterPage(),
-=======
-    const DashboardPage(),
-
-    const JobPage(isRecruiter: true,),
-
-    // const CandidatePipelinePage(),
-CandidatePage(),
-    const InterviewSchedulePage(),
-
-RecruiterProfilePage(),
-    // const RecruiterProfilePage(),
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
   ];
 
   void onTabChanged(int index) {
@@ -128,7 +108,6 @@ RecruiterProfilePage(),
             ),
 
             _item(
-<<<<<<< HEAD
               Icons.verified_rounded,
               "Approval",
               3,
@@ -141,15 +120,6 @@ RecruiterProfilePage(),
              _item(
               Icons.rate_review,
               "Feedback",
-=======
-              Icons.event,
-              "Interviews",
-              3,
-            ),
-             _item(
-              Icons.person,
-              "Profile",
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
               4,
             ),
           ],
@@ -180,38 +150,23 @@ RecruiterProfilePage(),
 
         padding:
             const EdgeInsets.symmetric(
-<<<<<<< HEAD
           horizontal: 15,
-=======
-          horizontal: 10,
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
           vertical: 6,
         ),
 
         decoration: BoxDecoration(
-<<<<<<< HEAD
           // color: isSelected
           //     ? Colors.deepPurple
           //         .withOpacity(0.15)
           //     : Colors.transparent,
-=======
-          color: isSelected
-              ? Colors.deepPurple
-                  .withOpacity(0.15)
-              : Colors.transparent,
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
           borderRadius:
               BorderRadius.circular(20),
         ),
 
-<<<<<<< HEAD
         child: Column(
           mainAxisSize: MainAxisSize.min,
 
-=======
-        child: Row(
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
           children: [
 
             Icon(

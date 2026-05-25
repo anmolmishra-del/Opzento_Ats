@@ -15,7 +15,7 @@ class EditProfileCubit
     required String name,
     required String role,
     required String email,
-    required String phone,
+    required String mobile,
     required String location,
     required String company,
     required String designation,
@@ -30,7 +30,7 @@ class EditProfileCubit
         name: name,
         role: role,
         email: email,
-        phone: phone,
+        mobile: mobile,
         location: location,
         company: company,
         designation: designation,
@@ -44,7 +44,7 @@ class EditProfileCubit
     required String name,
     required String role,
     required String email,
-    required String phone,
+    required String mobile,
     required String location,
     required String company,
     required String designation,
@@ -87,16 +87,22 @@ class EditProfileCubit
 
         'args': [
 
-          [2], // USER ID
+          [OdooService.currentUserId], // USER ID
 
-          {
+        {
 
-            'name': name,
+  'name': name,
 
-            'email': email,
+  'email': email,
 
-            'phone': phone,
-          }
+  'mobile': mobile,
+
+  'job_title':
+      designation,
+
+  'website':
+      website,
+}
         ],
 
         'kwargs': {},
@@ -108,7 +114,7 @@ class EditProfileCubit
           name: name,
           role: role,
           email: email,
-          phone: phone,
+          mobile: mobile,
           location: location,
           company: company,
           designation: designation,

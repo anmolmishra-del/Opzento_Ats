@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-<<<<<<< HEAD
 import 'package:opsento_ats/core/constants/app_colors.dart';
 import 'package:opsento_ats/core/constants/app_image.dart';
 import 'package:opsento_ats/features/forget_password/presention/forget_password_page.dart';
-=======
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 import 'package:opsento_ats/routes/app_routes.dart';
 import 'package:opsento_ats/features/auth/state/login_state.dart';
 
@@ -120,7 +117,6 @@ class _LoginPageState
                     const SizedBox(height: 50),
 
                     // EMAIL
-<<<<<<< HEAD
                   
 
                     const SizedBox(height: 10),
@@ -233,39 +229,11 @@ TextField(
     ),
   ),
 ),
-=======
-                    const Text(
-                      "Email",
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    TextField(
-
-                      controller:
-                          emailController,
-
-                      decoration:
-                          InputDecoration(
-
-                        hintText:
-                            "",
-
-                        border:
-                            OutlineInputBorder(
-
-                          borderRadius:
-                              BorderRadius.circular(14),
-                        ),
-                      ),
-                    ),
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
                     const SizedBox(height: 20),
 
                     Row(
 
-<<<<<<< HEAD
                       children: [
 
                         Checkbox(
@@ -283,93 +251,10 @@ TextField(
 
                         const Text(
                           "Remember me",
-=======
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-
-                      children: const [
-
-                        Text("Password"),
-
-                        Text(
-
-                          "Forgot Password?",
-
-                          style: TextStyle(
-                            color:
-                                Colors.deepPurple,
-                          ),
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
                         ),
                       ],
                     ),
 
-<<<<<<< HEAD
-=======
-                    const SizedBox(height: 10),
-
-                    TextField(
-
-                      controller:
-                          passwordController,
-
-                      obscureText:
-                          state.obscurePassword,
-
-                      decoration:
-                          InputDecoration(
-
-                        border:
-                            OutlineInputBorder(
-
-                          borderRadius:
-                              BorderRadius.circular(14),
-                        ),
-
-                        suffixIcon:
-                            IconButton(
-
-                          onPressed: () {
-
-                            cubit.togglePassword();
-                          },
-
-                          icon: Icon(
-
-                            state.obscurePassword
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // Row(
-
-                    //   children: [
-
-                    //     Checkbox(
-
-                    //       value:
-                    //           state.rememberMe,
-
-                    //       onChanged: (value) {
-
-                    //         cubit.toggleRememberMe(
-                    //           value!,
-                    //         );
-                    //       },
-                    //     ),
-
-                    //     const Text(
-                    //       "Remember me",
-                    //     ),
-                    //   ],
-                    // ),
-
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
                     const SizedBox(height: 20),
 
                     // LOGIN BUTTON
@@ -396,11 +281,7 @@ TextField(
                             ElevatedButton.styleFrom(
 
                           backgroundColor:
-<<<<<<< HEAD
                               AppColors.secondary,
-=======
-                              Colors.deepPurple,
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
                           shape:
                               RoundedRectangleBorder(
@@ -438,15 +319,9 @@ TextField(
 
                       children: const [
 
-<<<<<<< HEAD
                         Expanded(
                           child: Divider(),
                         ),
-=======
-                        // Expanded(
-                        //   child: Divider(),
-                        // ),
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
                         Padding(
 
@@ -455,15 +330,9 @@ TextField(
                             horizontal: 12,
                           ),
 
-<<<<<<< HEAD
                           child: Text(
                             "or continue with",
                           ),
-=======
-                          // child: Text(
-                          //   "or continue with",
-                          // ),
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
                         ),
 
                         Expanded(
@@ -474,7 +343,6 @@ TextField(
 
                     const SizedBox(height: 30),
 
-<<<<<<< HEAD
                    Row(
   mainAxisAlignment: MainAxisAlignment.center,
   children: [
@@ -504,26 +372,6 @@ TextField(
     ),
   ],
 ),
-=======
-                    // Row(
-
-                    //   mainAxisAlignment:
-                    //       MainAxisAlignment.center,
-
-                    //   children: [
-
-                    //     socialButton(
-                    //       "G",
-                    //     ),
-
-                    //     const SizedBox(width: 20),
-
-                    //     socialButton(
-                    //       "⊞",
-                    //     ),
-                    //   ],
-                    // ),
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
                   ],
                 ),
               );
@@ -534,7 +382,6 @@ TextField(
     );
   }
 
-<<<<<<< HEAD
   Widget socialButton({
   required String image,
   required VoidCallback onTap,
@@ -550,22 +397,11 @@ TextField(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-=======
-  Widget socialButton(String text) {
-
-    return Container(
-
-      width: 65,
-      height: 65,
-
-      decoration: BoxDecoration(
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
         border: Border.all(
           color: Colors.grey.shade300,
         ),
 
-<<<<<<< HEAD
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -584,24 +420,4 @@ TextField(
     ),
   );
  }
-=======
-        borderRadius:
-            BorderRadius.circular(16),
-      ),
-
-      child: Center(
-
-        child: Text(
-
-          text,
-
-          style: const TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 }

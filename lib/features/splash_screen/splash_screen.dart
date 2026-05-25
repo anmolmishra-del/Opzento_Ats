@@ -1,9 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-=======
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 import 'package:opsento_ats/core/constants/app_image.dart';
 import 'package:opsento_ats/routes/app_routes.dart';
 
@@ -11,24 +8,16 @@ class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
   @override
-<<<<<<< HEAD
   State<SplashPage> createState() =>
       _SplashPageState();
 }
 
 class _SplashPageState
     extends State<SplashPage> {
-=======
-  State<SplashPage> createState() => _SplashPageState();
-}
-
-class _SplashPageState extends State<SplashPage> {
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 
   @override
   void initState() {
     super.initState();
-<<<<<<< HEAD
     navigateScreen();
   }
 
@@ -68,7 +57,7 @@ class _SplashPageState extends State<SplashPage> {
 
       Navigator.pushReplacementNamed(
         context,
-        AppRoutes.signup,
+        AppRoutes.login,
       );
 
     }
@@ -91,32 +80,13 @@ class _SplashPageState extends State<SplashPage> {
         AppRoutes.login,
       );
     }
-=======
-    navigateToOnboard();
-  }
-
-  void navigateToOnboard() {
-    Future.delayed(
-      const Duration(seconds: 3),
-      () {
-        Navigator.pushReplacementNamed(
-          context,
-          AppRoutes.onboard,
-        );
-      },
-    );
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
   }
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
 
     return Scaffold(
 
-=======
-    return Scaffold(
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
       body: Stack(
         children: [
 
@@ -128,7 +98,6 @@ class _SplashPageState extends State<SplashPage> {
             ),
           ),
 
-<<<<<<< HEAD
           // CENTER TEXT
           const Center(
             child: Column(
@@ -154,24 +123,6 @@ class _SplashPageState extends State<SplashPage> {
                 Text(
                   "Smart Hiring, Better Future",
 
-=======
-          // OPTIONAL UI (if you want text, it must be here)
-          const Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "HRMS ATS",
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  "Smart Hiring, Better Future",
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white70,

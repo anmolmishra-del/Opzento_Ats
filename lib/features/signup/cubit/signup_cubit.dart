@@ -25,6 +25,8 @@ class SignupCubit
     );
   }
 
+
+
   void toggleConfirmPassword() {
 
     emit(
@@ -95,7 +97,7 @@ class SignupCubit
         name: name,
         email: email,
         password: password,
-        confirmPassword: 'confirmPassword',
+        confirmPassword: confirmPassword,
       );
 
       print(

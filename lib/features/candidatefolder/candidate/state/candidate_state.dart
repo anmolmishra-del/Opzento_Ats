@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 class CandidateState {
   final String selectedTab;
   final String searchQuery;
@@ -80,10 +79,6 @@ class Candidate {
 
 //   final String selectedTab;
 
-=======
-// class CandidateState {
-//   final String selectedTab;
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 //   final String searchQuery;
 
 //   final Map<String, int> tabCounts;
@@ -98,7 +93,6 @@ class Candidate {
 //   });
 
 //   factory CandidateState.initial() {
-<<<<<<< HEAD
 
 //     return const CandidateState(
 
@@ -111,40 +105,10 @@ class Candidate {
 
 //       // dynamic candidate list
 //       candidates: [],
-=======
-//     return const CandidateState(
-//       selectedTab: "Applied",
-//       searchQuery: "",
-//       tabCounts: {
-//         "Applied": 23,
-//         "Screening": 10,
-//         "HR Round": 6,
-//         "Technical Round": 4,
-//         "Presentation": 2,
-//       },
-//       candidates: [
-//         Candidate(
-//           name: "Rahul Sharma",
-//           role: "Flutter Developer",
-//           stage: "Applied",
-//         ),
-//         Candidate(
-//           name: "Anjali Verma",
-//           role: "Backend Developer",
-//           stage: "Screening",
-//         ),
-//         Candidate(
-//           name: "John Doe",
-//           role: "UI/UX Designer",
-//           stage: "HR Round",
-//         ),
-//       ],
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 //     );
 //   }
 
 //   CandidateState copyWith({
-<<<<<<< HEAD
 
 //     String? selectedTab,
 
@@ -173,24 +137,11 @@ class Candidate {
 //       candidates:
 //           candidates ??
 //               this.candidates,
-=======
-//     String? selectedTab,
-//     String? searchQuery,
-//     Map<String, int>? tabCounts,
-//     List<Candidate>? candidates,
-//   }) {
-//     return CandidateState(
-//       selectedTab: selectedTab ?? this.selectedTab,
-//       searchQuery: searchQuery ?? this.searchQuery,
-//       tabCounts: tabCounts ?? this.tabCounts,
-//       candidates: candidates ?? this.candidates,
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
 //     );
 //   }
 // }
 
 // class Candidate {
-<<<<<<< HEAD
 
 //   final String name;
 
@@ -207,98 +158,3 @@ class Candidate {
 //     required this.stage,
 //   });
 // }
-=======
-//   final String name;
-//   final String role;
-//   final String stage;
-
-//   const Candidate({
-//     required this.name,
-//     required this.role,
-//     required this.stage,
-//   });
-// }
-class CandidateState {
-
-  final String selectedTab;
-
-  final String searchQuery;
-
-  final Map<String, int> tabCounts;
-
-  final List<Candidate> candidates;
-
-  const CandidateState({
-    required this.selectedTab,
-    required this.searchQuery,
-    required this.tabCounts,
-    required this.candidates,
-  });
-
-  factory CandidateState.initial() {
-
-    return const CandidateState(
-
-      selectedTab: "Applied",
-
-      searchQuery: "",
-
-      // dynamic counts
-      tabCounts: {},
-
-      // dynamic candidate list
-      candidates: [],
-    );
-  }
-
-  CandidateState copyWith({
-
-    String? selectedTab,
-
-    String? searchQuery,
-
-    Map<String, int>? tabCounts,
-
-    List<Candidate>? candidates,
-
-  }) {
-
-    return CandidateState(
-
-      selectedTab:
-          selectedTab ??
-              this.selectedTab,
-
-      searchQuery:
-          searchQuery ??
-              this.searchQuery,
-
-      tabCounts:
-          tabCounts ??
-              this.tabCounts,
-
-      candidates:
-          candidates ??
-              this.candidates,
-    );
-  }
-}
-
-class Candidate {
-
-  final String name;
-
-  final String role;
-
-  final String stage;
-
-  const Candidate({
-
-    required this.name,
-
-    required this.role,
-
-    required this.stage,
-  });
-}
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc

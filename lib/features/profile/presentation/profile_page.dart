@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:opsento_ats/core/constants/app_colors.dart';
+import 'package:opsento_ats/features/edit_profile/presention/edit_profile_page.dart';
 import 'package:opsento_ats/features/profile/cubit/profile_cubit.dart';
 import 'package:opsento_ats/features/profile/state/profile_state.dart';
 import 'package:opsento_ats/routes/app_routes.dart';
@@ -38,7 +41,7 @@ class RecruiterProfilePage
                 children: [
 SizedBox(height: 50,),
                   // TOP HEADER
-                  const SizedBox(width: 16),
+                   SizedBox(width: 16),
                                     
                                        
                                        Align(
@@ -47,13 +50,39 @@ SizedBox(height: 50,),
                   
                     child: GestureDetector(
                   
-                      onTap: () {
+//                       onTap: () {
                   
-                        Navigator.pushNamed(
-                          context,
-                          AppRoutes.editprofile,
-                        );
-                      },
+//                       Navigator.pushNamed(
+
+//   context,
+
+//   AppRoutes.editprofile,
+
+//   arguments: state,
+// );
+onTap: () async {
+
+  await Navigator.push(
+
+    context,
+
+    MaterialPageRoute(
+
+      builder: (_) =>
+
+          EditProfilePage(
+
+            profileState: state,
+          ),
+    ),
+  );
+
+  context
+      .read<
+          RecruiterProfileCubit>()
+      .getProfile();
+},
+                      
                   
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -117,21 +146,31 @@ SizedBox(height: 50,),
                       child: Column(
                         children: [
 
-                          const CircleAvatar(
-                            radius: 50,
+                        CircleAvatar(
 
-                            backgroundColor:
-                                AppColors.card,
+  radius: 55,
 
-                            child: Icon(
-                              Icons.person,
+  backgroundImage:
+      state.image.isNotEmpty
 
-                              size: 50,
+          ? MemoryImage(
+              base64Decode(
+                state.image,
+              ),
+            )
 
-                              // color:
-                              //     Colors.white,
-                            ),
-                          ),
+          : null,
+
+  child:
+      state.image.isEmpty
+
+          ? const Icon(
+              Icons.person,
+              size: 50,
+            )
+
+          : null,
+),
 
                           const SizedBox(
                               height: 16),
@@ -141,10 +180,10 @@ SizedBox(height: 50,),
 
                             style:
                                 const TextStyle(
-                              fontSize: 28,
+                              fontSize: 24,
 
                               fontWeight:
-                                  FontWeight.bold,
+                                  FontWeight.w500,
                             ),
                           ),
 
@@ -204,7 +243,7 @@ SizedBox(height: 50,),
                           child: _statCard(
   Icons.work,
 
-  "24",
+     state.jobsPosted.toString(),
 
   "Jobs Posted",
 
@@ -223,7 +262,7 @@ SizedBox(height: 50,),
                           child: _statCard(
   Icons.people,
 
-  "120",
+  state.totalApplicants.toString(),
 
   "Applicants",
 

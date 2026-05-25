@@ -49,7 +49,6 @@ class InterviewSchedulePage extends StatelessWidget {
                 ),
     
                 const SizedBox(height: 16),
-<<<<<<< HEAD
                 const Text("Candidate Email"),
 
 const SizedBox(height: 8),
@@ -69,8 +68,6 @@ TextField(
     prefixIcon: Icon(Icons.email_outlined),
   ),
 ),
-=======
->>>>>>> 43cbe6ce7c2264bbdaaea6a51ab7beb043056dcc
     
                 /// Interview Type (SAFE VALUE)
                 const Text("Interview Type"),
