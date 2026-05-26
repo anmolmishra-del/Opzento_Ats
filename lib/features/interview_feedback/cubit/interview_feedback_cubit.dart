@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opsento_ats/features/feed_back/state/feed_back_state.dart';
+import 'package:opsento_ats/features/interview_feedback/state/interview_feedback_state.dart';
 
 class InterviewFeedbackCubit extends Cubit<InterviewFeedbackState> {
   InterviewFeedbackCubit() : super(InterviewFeedbackState());

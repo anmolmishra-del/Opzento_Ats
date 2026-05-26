@@ -182,9 +182,9 @@ class DashboardPage extends StatelessWidget {
                       const SizedBox(height: 15),
 
                       // LOADING
-                      if (state.isLoading)
-                        const Center(child: CircularProgressIndicator())
-                      else
+                      // if (state.isLoading)
+                      //   const Center(child: CircularProgressIndicator())
+                      // else
                         SizedBox(
                           height: 220,
                           child: Row(

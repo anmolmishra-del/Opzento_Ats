@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:opsento_ats/core/services/api_service.dart';
+import 'package:opsento_ats/core/services/odoo_service.dart';
+import 'package:opsento_ats/core/constants/api_config.dart';
 import 'package:opsento_ats/features/signup/state/signup_state.dart';
 
 class SignupCubit
@@ -13,7 +14,7 @@ class SignupCubit
       const FlutterSecureStorage();
 
   final service =
-      OdooService();
+      OdooService(ApiConfig.baseUrl);
 
   void togglePassword() {
 

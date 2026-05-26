@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opsento_ats/features/recruiter/cubit/recruiter_cubit.dart';
-import 'package:opsento_ats/features/recruiter/state/recruter_profile_state.dart';
-
+import 'package:opsento_ats/features/recruiter/state/recruiter_profile_state.dart';
+import 'package:opsento_ats/features/auth/cubit/login_cubit.dart';
+import 'package:opsento_ats/routes/app_routes.dart';
 
 class RecruiterProfilePage
     extends StatelessWidget {
@@ -86,7 +87,7 @@ SizedBox(height: 50,),
                             radius: 50,
 
                             backgroundColor:
-                                Colors.deepPurple,
+                                Colors.indigo,
 
                             child: Icon(
                               Icons.person,
@@ -122,7 +123,7 @@ SizedBox(height: 50,),
                             style:
                                 const TextStyle(
                               color:
-                                  Colors.deepPurple,
+                                  Colors.indigo,
 
                               fontSize: 18,
                             ),
@@ -307,8 +308,18 @@ SizedBox(height: 50,),
 
                       child: ElevatedButton.icon(
 
-                        onPressed: () {},
-
+                        onPressed: () async {
+                          final cubit = context.read<LoginCubit>();
+                          await cubit.logout();
+                          
+                          if (context.mounted) {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              AppRoutes.login,
+                              (route) => false,
+                            );
+                          }
+                        },
                         icon: const Icon(
                           Icons.logout,
                         ),
@@ -320,7 +331,7 @@ SizedBox(height: 50,),
                         style:
                             ElevatedButton.styleFrom(
                           backgroundColor:
-                              Colors.deepPurple,
+                              Colors.indigo,
 
                           foregroundColor:
                               Colors.white,
@@ -351,7 +362,7 @@ SizedBox(height: 50,),
   String text, {
 
   Color iconColor =
-      Colors.deepPurple,
+      Colors.indigo,
 
   Color textColor =
       Colors.black,
@@ -395,7 +406,7 @@ Widget _statCard(
   String label, {
 
   Color iconColor =
-      Colors.deepPurple,
+      Colors.indigo,
 
   Color iconBgColor =
       const Color(0xffEEE8FF),

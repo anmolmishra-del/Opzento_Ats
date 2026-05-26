@@ -11,34 +11,11 @@ import 'package:opsento_ats/features/jobs/cubit/job_cubit.dart';
 import 'package:opsento_ats/features/my_applications/cubit/my_application_cubit.dart';
 
 import 'package:opsento_ats/features/interview_schedule/cubit/interview_cubit.dart';
+import 'package:opsento_ats/features/auth/cubit/login_cubit.dart';
+import 'package:opsento_ats/features/profile/cubit/profile_cubit.dart';
 
 void main() {
-
-  runApp(
-
-    MultiBlocProvider(
-
-      providers: [
-
-        BlocProvider(
-          create: (_) => JobCubit(),
-        ),
-
-        BlocProvider(
-          create: (_) =>
-              MyApplicationCubit(),
-        ),
-
-        // ADD THIS
-        BlocProvider(
-          create: (_) =>
-              InterviewScheduleCubit(),
-        ),
-      ],
-
-      child: const MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -48,16 +25,30 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return MaterialApp(
-
-      debugShowCheckedModeBanner: false,
-home: SplashPage(),
-      // home: RecruiterMainLayout(),
-
-      // home: CandidateMainLayout(),
-
-      onGenerateRoute:
-          AppRoutes.generateRoute,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => JobCubit(),
+        ),
+        BlocProvider(
+          create: (_) => MyApplicationCubit(),
+        ),
+        BlocProvider(
+          create: (_) => InterviewScheduleCubit(),
+        ),
+        BlocProvider(
+          lazy: false,
+          create: (_) => RecruiterProfileCubit(),
+        ),
+        BlocProvider(
+          create: (_) => LoginCubit(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SplashPage(),
+        onGenerateRoute: AppRoutes.generateRoute,
+      ),
     );
   }
 }

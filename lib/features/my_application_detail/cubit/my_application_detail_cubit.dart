@@ -1,7 +1,7 @@
 // application_details_cubit.dart
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opsento_ats/features/my_appliation_detail.dart/state/detail_state.dart';
+import 'package:opsento_ats/features/my_application_detail/state/detail_state.dart';
 
 class ApplicationDetailsCubit
     extends Cubit<ApplicationDetailsState> {

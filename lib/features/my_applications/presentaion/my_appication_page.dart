@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opsento_ats/features/my_appliation_detail.dart/presentation/my_application_details_page.dart';
+import 'package:opsento_ats/features/my_application_detail/presentation/my_application_details_page.dart';
 import 'package:opsento_ats/features/my_applications/presentaion/my_application_widget.dart';
-import 'package:opsento_ats/features/my_applications/state/my_appication_state.dart';
+import 'package:opsento_ats/features/my_applications/state/my_application_state.dart';
 
 import '../cubit/my_application_cubit.dart';
 

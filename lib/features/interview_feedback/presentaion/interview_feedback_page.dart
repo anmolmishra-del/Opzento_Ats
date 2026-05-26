@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opsento_ats/core/constants/app_colors.dart';
-import 'package:opsento_ats/features/feed_back/cubit/feed_back_cubit.dart';
-import 'package:opsento_ats/features/feed_back/state/feed_back_state.dart';
+import 'package:opsento_ats/features/interview_feedback/cubit/interview_feedback_cubit.dart';
+import 'package:opsento_ats/features/interview_feedback/state/interview_feedback_state.dart';
 import 'package:opsento_ats/features/offer_approv/presetion/offere_screen.dart';
 import 'package:opsento_ats/features/offer_later/presentaion/offer_later_page.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opsento_ats/features/candidatefolder/candidate_interview/state/interview_state.dart';
-import '../../../my_applications/state/my_appication_state.dart';
+import '../../../my_applications/state/my_application_state.dart';
 
 class CandidateInterviewCubit
     extends Cubit<CandidateInterviewState> {

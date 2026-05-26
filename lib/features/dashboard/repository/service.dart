@@ -1,17 +1,11 @@
-import 'package:opsento_ats/core/services/api_service.dart';
-
+import 'package:opsento_ats/core/services/odoo_service.dart';
+import 'package:opsento_ats/core/constants/api_config.dart';
 class DashboardRepository {
 
   Future<Map<String, dynamic>>
       getDashboardStats() async {
 
-    /// LOAD SESSION
-    await OdooService()
-        .loadSession();
-
-    /// LOAD USER ID
-    await OdooService()
-        .loadUserId();
+    /// LOAD SESSION (handled by OdooService singleton or prefs)
 
     /// RECRUITER NAME
     String name = "";
@@ -19,9 +13,7 @@ class DashboardRepository {
     try {
 
       final user =
-          await OdooService()
-              .client
-              .callKw({
+          await OdooService(ApiConfig.baseUrl).callKw({
 
         'model': 'res.users',
 
@@ -63,9 +55,7 @@ class DashboardRepository {
         await Future.wait([
 
       /// OPEN POSITIONS
-      OdooService()
-          .client
-          .callKw({
+      OdooService(ApiConfig.baseUrl).callKw({
 
         'model': 'hr.job.recruitment',
 
@@ -85,9 +75,7 @@ class DashboardRepository {
       }),
 
       /// APPLICATIONS
-      OdooService()
-          .client
-          .callKw({
+      OdooService(ApiConfig.baseUrl).callKw({
 
         'model': 'hr.applicant',
 
@@ -107,9 +95,7 @@ class DashboardRepository {
       }),
 
       /// INTERVIEWS
-      OdooService()
-          .client
-          .callKw({
+      OdooService(ApiConfig.baseUrl).callKw({
 
         'model': 'hr.applicant',
 
@@ -135,9 +121,7 @@ class DashboardRepository {
       }),
 
       /// OFFERS
-      OdooService()
-          .client
-          .callKw({
+      OdooService(ApiConfig.baseUrl).callKw({
 
         'model': 'hr.applicant',
 
@@ -163,9 +147,7 @@ class DashboardRepository {
       }),
 
       /// HIRED
-      OdooService()
-          .client
-          .callKw({
+      OdooService(ApiConfig.baseUrl).callKw({
 
         'model': 'hr.applicant',
 
@@ -191,9 +173,7 @@ class DashboardRepository {
       }),
 
       /// REJECTED
-      OdooService()
-          .client
-          .callKw({
+      OdooService(ApiConfig.baseUrl).callKw({
 
         'model': 'hr.applicant',
 

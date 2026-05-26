@@ -14,7 +14,7 @@ class DashboardCubit extends Cubit<DashboardState> {
     loadDashboard();
   }
 
-  final repository = DashboardRepository();
+  // final repository = DashboardRepository();
 
   void changeFilter(String value) {
     emit(
@@ -34,72 +34,72 @@ class DashboardCubit extends Cubit<DashboardState> {
       ),
     );
 
-    try {
-      final data =
-          await repository.getDashboardStats();
+//     try {
+//       final data =
+//           await repository.getDashboardStats();
 
-      print("API DATA => $data");
+//       print("API DATA => $data");
 
-      final counts =
-          List<int>.from(
-        data['counts'] ?? [],
-      );
+//       final counts =
+//           List<int>.from(
+//         data['counts'] ?? [],
+//       );
 
-      final chartValues =
-          List<double>.from(
-        (data['chartValues'] ?? [])
-            .map(
-              (e) => (e as num).toDouble(),
-            ),
-      );
+//       final chartValues =
+//           List<double>.from(
+//         (data['chartValues'] ?? [])
+//             .map(
+//               (e) => (e as num).toDouble(),
+//             ),
+//       );
 
-      print("COUNTS => $counts");
+//       print("COUNTS => $counts");
 
-      print(
-        "CHART VALUES => $chartValues",
-      );
+//       print(
+//         "CHART VALUES => $chartValues",
+//       );
 
-      // MAKE BOTH LISTS SAME LENGTH
-      while (chartValues.length <
-          counts.length) {
-        chartValues.add(0);
-      }
+//       // MAKE BOTH LISTS SAME LENGTH
+//       while (chartValues.length <
+//           counts.length) {
+//         chartValues.add(0);
+//       }
 
-      emit(
-        state.copyWith(
-          isLoading: false,
+//       emit(
+//         state.copyWith(
+//           isLoading: false,
 
-          name:
-              data['recruiterName'] ??
-                  "",
+//           name:
+//               data['recruiterName'] ??
+//                   "",
 
-          counts: counts,
+//           counts: counts,
 
-          chartValues: chartValues,
+//           chartValues: chartValues,
 
-          error: null,
-        ),
-      );
-print(data);
-print(data['counts']);
-print(data['chartValues']);
-      print(
-        "STATE UPDATED SUCCESS",
-      );
-    } catch (e) {
-      print("DASHBOARD ERROR");
+//           error: null,
+//         ),
+//       );
+// print(data);
+// print(data['counts']);
+// print(data['chartValues']);
+//       print(
+//         "STATE UPDATED SUCCESS",
+//       );
+//     } catch (e) {
+//       print("DASHBOARD ERROR");
 
-      print(e);
+//       print(e);
 
-      emit(
-        state.copyWith(
-          isLoading: false,
+//       emit(
+//         state.copyWith(
+//           isLoading: false,
 
-          error:
-              e.toString(),
-        ),
-      );
-    }
+//           error:
+//               e.toString(),
+//         ),
+//       );
+//     }
   }
 
   void refreshDashboard() {

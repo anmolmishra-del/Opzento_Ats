@@ -1,4 +1,4 @@
-import '../../../my_applications/state/my_appication_state.dart';
+import '../../../my_applications/state/my_application_state.dart';
 
 class CandidateInterviewState {
 
