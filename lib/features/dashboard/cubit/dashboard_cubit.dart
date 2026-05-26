@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opsento_ats/utils/shared_ref.dart';
 
 import 'package:opsento_ats/features/dashboard/repository/service.dart';
 
@@ -34,17 +35,44 @@ class DashboardCubit extends Cubit<DashboardState> {
       ),
     );
 
+    try {
+      final prefs = SharedPref();
+      final userData = await prefs.getObject('user_profile');
+      String name = "";
+      
+      if (userData != null && userData is Map && userData.isNotEmpty) {
+        name = userData['name']?.toString() ?? "";
+      }
+
+      emit(
+        state.copyWith(
+          isLoading: false,
+          name: name,
+          error: null,
+        ),
+      );
+    } catch (e) {
+      print("DASHBOARD ERROR");
+      print(e);
+      emit(
+        state.copyWith(
+          isLoading: false,
+          error: e.toString(),
+        ),
+      );
+    }
+
 //     try {
 //       final data =
 //           await repository.getDashboardStats();
-
+//
 //       print("API DATA => $data");
-
+//
 //       final counts =
 //           List<int>.from(
 //         data['counts'] ?? [],
 //       );
-
+//
 //       final chartValues =
 //           List<double>.from(
 //         (data['chartValues'] ?? [])
@@ -52,31 +80,31 @@ class DashboardCubit extends Cubit<DashboardState> {
 //               (e) => (e as num).toDouble(),
 //             ),
 //       );
-
+//
 //       print("COUNTS => $counts");
-
+//
 //       print(
 //         "CHART VALUES => $chartValues",
 //       );
-
+//
 //       // MAKE BOTH LISTS SAME LENGTH
 //       while (chartValues.length <
 //           counts.length) {
 //         chartValues.add(0);
 //       }
-
+//
 //       emit(
 //         state.copyWith(
 //           isLoading: false,
-
+//
 //           name:
 //               data['recruiterName'] ??
 //                   "",
-
+//
 //           counts: counts,
-
+//
 //           chartValues: chartValues,
-
+//
 //           error: null,
 //         ),
 //       );
@@ -88,13 +116,13 @@ class DashboardCubit extends Cubit<DashboardState> {
 //       );
 //     } catch (e) {
 //       print("DASHBOARD ERROR");
-
+//
 //       print(e);
-
+//
 //       emit(
 //         state.copyWith(
 //           isLoading: false,
-
+//
 //           error:
 //               e.toString(),
 //         ),

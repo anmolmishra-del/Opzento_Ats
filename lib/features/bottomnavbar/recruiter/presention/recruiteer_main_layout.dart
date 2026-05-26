@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:opsento_ats/utils/shared_ref.dart';
+import 'package:opsento_ats/routes/app_routes.dart';
 import 'package:opsento_ats/features/candidatefolder/candidate/presentaion/candidate_page.dart';
 import 'package:opsento_ats/features/dashboard/presentaion/dashboard_page.dart';
 import 'package:opsento_ats/features/interview_feedback/presentaion/interview_feedback_page.dart';
@@ -14,6 +16,26 @@ class RecruiterMainLayout extends StatefulWidget {
 
 class _RecruiterMainLayoutState extends State<RecruiterMainLayout> {
   int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAuth();
+  }
+
+  Future<void> _checkAuth() async {
+    final prefs = SharedPref();
+    final isLoggedIn = await prefs.getBool('isLoggedIn') ?? false;
+    if (!isLoggedIn) {
+      if (mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppRoutes.login,
+          (route) => false,
+        );
+      }
+    }
+  }
 
   final List<Widget> pages = [
     DashboardPage(),

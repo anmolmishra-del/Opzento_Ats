@@ -123,7 +123,10 @@ class LoginCubit extends Cubit<LoginState> {
             'partner_id',
             'active',
             'signature',
-            'notification_type'
+            'notification_type',
+            'image_1920',
+            'mobile',
+            'website'
           ],
         },
       });
@@ -261,6 +264,7 @@ class LoginCubit extends Cubit<LoginState> {
     await prefs.remove('profile_pic');
     await prefs.remove('partner_id');
     await prefs.remove('isInternalUser');
+    await prefs.remove('user_profile');
     
     // Do NOT remove rememberMe, saved_username, saved_password here,
     // so they persist after logout for pre-filling the login screen.

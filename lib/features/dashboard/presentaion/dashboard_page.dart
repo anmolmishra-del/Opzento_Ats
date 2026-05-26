@@ -30,7 +30,7 @@ class DashboardPage extends StatelessWidget {
                       // TOP BAR
                       Row(
                         children: [
-                          const CircleAvatar(radius: 24),
+                          const CircleAvatar(radius: 18),
                           const SizedBox(width: 12),
                           Column(
   crossAxisAlignment:

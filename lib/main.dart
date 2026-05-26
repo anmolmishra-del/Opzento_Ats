@@ -37,7 +37,6 @@ class MyApp extends StatelessWidget {
           create: (_) => InterviewScheduleCubit(),
         ),
         BlocProvider(
-          lazy: false,
           create: (_) => RecruiterProfileCubit(),
         ),
         BlocProvider(

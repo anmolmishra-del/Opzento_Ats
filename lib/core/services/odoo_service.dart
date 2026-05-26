@@ -174,7 +174,10 @@ class OdooService {
             'partner_id',
             'active',
             'signature',
-            'notification_type'
+            'notification_type',
+            'image_1920',
+            'mobile',
+            'website'
           ],
         },
       });
