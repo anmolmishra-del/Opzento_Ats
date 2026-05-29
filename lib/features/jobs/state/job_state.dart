@@ -1,92 +1,475 @@
+
+import 'package:opsento_ats/features/jobs/model/model_class.dart';
+
 class JobState {
 
   final String selectedTab;
+
   final String searchQuery;
 
   final List<JobData> jobs;
 
   const JobState({
+
     required this.selectedTab,
+
     required this.searchQuery,
+
     required this.jobs,
   });
 
   factory JobState.initial() {
 
     return JobState(
+
       selectedTab: "All",
+
       searchQuery: "",
+
       jobs: [],
     );
   }
 
   JobState copyWith({
+
     String? selectedTab,
+
     String? searchQuery,
+
     List<JobData>? jobs,
+
   }) {
 
     return JobState(
+
       selectedTab:
           selectedTab ?? this.selectedTab,
 
       searchQuery:
           searchQuery ?? this.searchQuery,
 
-      jobs: jobs ?? this.jobs,
+      jobs:
+          jobs ?? this.jobs,
     );
   }
 }
 
-class JobData {
+class RecruitmentState {
 
-  final String title;
-  final String department;
+  final List<RecruitmentModel>
+      recruitments;
 
-  final String experience;
-  final String location;
+  final bool loading;
 
-  final String salary;
-  final String type;
- final List<String> primarySkills;
+  // DROPDOWN DATA
 
-  final List<String> secondarySkills;
-  final String status;
+  final List<Map<String, dynamic>>
+      addresses;
 
-  final int newCount;
+  final List<Map<String, dynamic>>
+      partners;
 
-  // NEW FIELDS
+  final List<Map<String, dynamic>>
+      companies;
 
-  final String description;
+  final List<Map<String, dynamic>>
+      jobs;
 
-  final List<String> responsibilities;
+  final List<Map<String, dynamic>>
+      contractTypes;
 
-  final List<String> requirements;
+  final List<Map<String, dynamic>>
+      experiences;
 
-  const JobData({
+  final List<Map<String, dynamic>>
+      categories;
 
-    required this.title,
+  final List<Map<String, dynamic>>
+      recruiters;
 
-    required this.department,
+  final List<Map<String, dynamic>>
+      websites;
 
-    required this.experience,
-    required this.primarySkills,
+  final List<Map<String, dynamic>>
+      skills;
 
-    required this.secondarySkills,
-    required this.location,
+  final List<Map<String, dynamic>>
+      locations;
 
-    required this.salary,
+  final List<Map<String, dynamic>>
+      stages;
 
-    required this.type,
+  // SELECTED VALUES
 
-    this.status = "Open",
+  final String selectedRecruitmentType;
 
-    this.newCount = 0,
+  final int? selectedAddressId;
 
-    required this.description,
+  final int? selectedRequestedById;
 
-    required this.responsibilities,
+  final int? selectedCompanyId;
 
-    required this.requirements,
+  final int? selectedJobId;
+
+  final int? selectedContractTypeId;
+
+  final int? selectedExperienceId;
+
+  final int? selectedCategoryId;
+
+  final int? selectedRecruiterId;
+
+  final int? selectedWebsiteId;
+
+  // MANY2MANY
+
+  final List<int>
+      selectedInterviewerIds;
+
+  final List<int>
+      selectedLocationIds;
+
+  final List<int>
+      selectedStageIds;
+
+  final List<int>
+      selectedPrimarySkillIds;
+
+  final List<int>
+      selectedSecondarySkillIds;
+
+  RecruitmentState({
+
+    required this.recruitments,
+
+    required this.loading,
+
+    required this.addresses,
+
+    required this.partners,
+
+    required this.companies,
+
+    required this.jobs,
+
+    required this.contractTypes,
+
+    required this.experiences,
+
+    required this.categories,
+
+    required this.recruiters,
+
+    required this.websites,
+
+    required this.skills,
+
+    required this.locations,
+
+    required this.stages,
+
+    required this.selectedRecruitmentType,
+
+    required this.selectedAddressId,
+
+    required this.selectedRequestedById,
+
+    required this.selectedCompanyId,
+
+    required this.selectedJobId,
+
+    required this.selectedContractTypeId,
+
+    required this.selectedExperienceId,
+
+    required this.selectedCategoryId,
+
+    required this.selectedRecruiterId,
+
+    required this.selectedWebsiteId,
+
+    required this.selectedInterviewerIds,
+
+    required this.selectedLocationIds,
+
+    required this.selectedStageIds,
+
+    required this.selectedPrimarySkillIds,
+
+    required this.selectedSecondarySkillIds,
   });
+
+  factory RecruitmentState.initial() {
+
+    return RecruitmentState(
+
+      recruitments: [],
+
+      loading: false,
+
+      // DROPDOWNS
+
+      addresses: [],
+
+      partners: [],
+
+      companies: [],
+
+      jobs: [],
+
+      contractTypes: [],
+
+      experiences: [],
+
+      categories: [],
+
+      recruiters: [],
+
+      websites: [],
+
+      skills: [],
+
+      locations: [],
+
+      stages: [],
+
+      // SELECTED
+
+      selectedRecruitmentType:
+          'internal',
+
+      selectedAddressId: null,
+
+      selectedRequestedById: null,
+
+      selectedCompanyId: null,
+
+      selectedJobId: null,
+
+      selectedContractTypeId: null,
+
+      selectedExperienceId: null,
+
+      selectedCategoryId: null,
+
+      selectedRecruiterId: null,
+
+      selectedWebsiteId: null,
+
+      // MANY2MANY
+
+      selectedInterviewerIds: [],
+
+      selectedLocationIds: [],
+
+      selectedStageIds: [],
+
+      selectedPrimarySkillIds: [],
+
+      selectedSecondarySkillIds: [],
+      
+    );
+  }
+
+  RecruitmentState copyWith({
+
+    List<RecruitmentModel>?
+        recruitments,
+
+    bool? loading,
+
+    List<Map<String, dynamic>>?
+        addresses,
+
+    List<Map<String, dynamic>>?
+        partners,
+
+    List<Map<String, dynamic>>?
+        companies,
+
+    List<Map<String, dynamic>>?
+        jobs,
+
+    List<Map<String, dynamic>>?
+        contractTypes,
+
+    List<Map<String, dynamic>>?
+        experiences,
+
+    List<Map<String, dynamic>>?
+        categories,
+
+    List<Map<String, dynamic>>?
+        recruiters,
+
+    List<Map<String, dynamic>>?
+        websites,
+
+    List<Map<String, dynamic>>?
+        skills,
+
+    List<Map<String, dynamic>>?
+        locations,
+
+    List<Map<String, dynamic>>?
+        stages,
+
+    String?
+        selectedRecruitmentType,
+
+    int? selectedAddressId,
+
+    int? selectedRequestedById,
+
+    int? selectedCompanyId,
+
+    int? selectedJobId,
+
+    int? selectedContractTypeId,
+
+    int? selectedExperienceId,
+
+    int? selectedCategoryId,
+
+    int? selectedRecruiterId,
+
+    int? selectedWebsiteId,
+
+    List<int>?
+        selectedInterviewerIds,
+
+    List<int>?
+        selectedLocationIds,
+
+    List<int>?
+        selectedStageIds,
+
+    List<int>?
+        selectedPrimarySkillIds,
+
+    List<int>?
+        selectedSecondarySkillIds,
+
+  }) {
+
+    return RecruitmentState(
+
+      recruitments:
+          recruitments ??
+          this.recruitments,
+
+      loading:
+          loading ??
+          this.loading,
+
+      addresses:
+          addresses ??
+          this.addresses,
+
+      partners:
+          partners ??
+          this.partners,
+
+      companies:
+          companies ??
+          this.companies,
+
+      jobs:
+          jobs ??
+          this.jobs,
+
+      contractTypes:
+          contractTypes ??
+          this.contractTypes,
+
+      experiences:
+          experiences ??
+          this.experiences,
+
+      categories:
+          categories ??
+          this.categories,
+
+      recruiters:
+          recruiters ??
+          this.recruiters,
+
+      websites:
+          websites ??
+          this.websites,
+
+      skills:
+          skills ??
+          this.skills,
+
+      locations:
+          locations ??
+          this.locations,
+
+      stages:
+          stages ??
+          this.stages,
+
+      selectedRecruitmentType:
+          selectedRecruitmentType ??
+          this.selectedRecruitmentType,
+
+      selectedAddressId:
+          selectedAddressId ??
+          this.selectedAddressId,
+
+      selectedRequestedById:
+          selectedRequestedById ??
+          this.selectedRequestedById,
+
+      selectedCompanyId:
+          selectedCompanyId ??
+          this.selectedCompanyId,
+
+      selectedJobId:
+          selectedJobId ??
+          this.selectedJobId,
+
+      selectedContractTypeId:
+          selectedContractTypeId ??
+          this.selectedContractTypeId,
+
+      selectedExperienceId:
+          selectedExperienceId ??
+          this.selectedExperienceId,
+
+      selectedCategoryId:
+          selectedCategoryId ??
+          this.selectedCategoryId,
+
+      selectedRecruiterId:
+          selectedRecruiterId ??
+          this.selectedRecruiterId,
+
+      selectedWebsiteId:
+          selectedWebsiteId ??
+          this.selectedWebsiteId,
+
+      selectedInterviewerIds:
+          selectedInterviewerIds ??
+          this.selectedInterviewerIds,
+
+      selectedLocationIds:
+          selectedLocationIds ??
+          this.selectedLocationIds,
+
+      selectedStageIds:
+          selectedStageIds ??
+          this.selectedStageIds,
+
+      selectedPrimarySkillIds:
+          selectedPrimarySkillIds ??
+          this.selectedPrimarySkillIds,
+
+      selectedSecondarySkillIds:
+          selectedSecondarySkillIds ??
+          this.selectedSecondarySkillIds,
+    );
+  }
 }
+

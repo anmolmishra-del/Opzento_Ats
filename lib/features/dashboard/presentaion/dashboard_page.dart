@@ -32,31 +32,28 @@ class DashboardPage extends StatelessWidget {
                         children: [
                           const CircleAvatar(radius: 18),
                           const SizedBox(width: 12),
-                          Column(
-  crossAxisAlignment:
-      CrossAxisAlignment.start,
-  children: [
-
-    Text(
-      "Hello",
-      style: TextStyle(
-        color: Colors.grey,
-      ),
-    ),
-
-    Text(
-                            state.name,
-
-                            style:
-                                const TextStyle(
-                              fontSize: 16,
-
-                              fontWeight:
-                                  FontWeight.w500,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Hello",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  state.name,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ],
                             ),
                           ),
-  ],
-),
                           const Spacer(),
                           IconButton(
                             icon: const Icon(Icons.notifications_none, size: 28),

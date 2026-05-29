@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opsento_ats/features/jobs/model/model_class.dart';
 import 'package:opsento_ats/features/my_applications/cubit/my_application_cubit.dart';
 import 'package:opsento_ats/features/my_applications/presentaion/my_appication_page.dart';
 import '../state/job_state.dart';
@@ -89,10 +90,7 @@ final bool isRecruiter;
        
                       MaterialPageRoute(
                         builder: (_) =>
-                            CreateJobPage(
-                          job: job,
-                          
-                        ),
+                           RecruitmentCreatePage()
                       ),
                     );
                   },
