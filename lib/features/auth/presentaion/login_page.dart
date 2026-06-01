@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:odoo_rpc/odoo_rpc.dart';
 import 'package:opsento_ats/core/constants/app_image.dart';
 import 'package:opsento_ats/features/forget_password/presention/forget_password_page.dart';
 import 'package:opsento_ats/routes/app_routes.dart';
 import 'package:opsento_ats/features/auth/state/login_state.dart';
+import 'package:opsento_ats/features/candidatefolder/candidate/cubit/candidate_cubit.dart';
+import 'package:opsento_ats/utils/shared_ref.dart';
 
 import '../cubit/login_cubit.dart';
 
@@ -23,8 +26,42 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       body: BlocConsumer<LoginCubit, LoginState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state.status == LoginStatus.success) {
+            // 🔄 UPDATE CANDIDATE CUBIT WITH NEW SESSION BEFORE NAVIGATION
+            final prefs = SharedPref();
+            final sessionData = await prefs.getObject('session');
+            
+            if (sessionData != null && sessionData is Map && sessionData.isNotEmpty) {
+              // Reconstruct OdooSession from saved data
+              final session = OdooSession(
+                id: sessionData['id']?.toString() ?? '',
+                userId: sessionData['userId'] is int
+                    ? sessionData['userId']
+                    : int.parse(sessionData['userId']?.toString() ?? '0'),
+                partnerId: sessionData['partnerId'] is int
+                    ? sessionData['partnerId']
+                    : int.parse(sessionData['partnerId']?.toString() ?? '0'),
+                companyId: sessionData['companyId'] is int
+                    ? sessionData['companyId']
+                    : int.parse(sessionData['companyId']?.toString() ?? '0'),
+                allowedCompanies: const <Company>[],
+                userLogin: sessionData['userLogin']?.toString() ?? '',
+                userName: sessionData['userName']?.toString() ?? '',
+                userLang: sessionData['userLang']?.toString() ?? "en_US",
+                userTz: sessionData['userTz']?.toString() ?? "UTC",
+                isSystem: sessionData['isSystem'] is bool ? sessionData['isSystem'] : false,
+                dbName: sessionData['dbName']?.toString() ?? 'ftprotech',
+                serverVersion: sessionData['serverVersion']?.toString() ?? "",
+              );
+              
+              // Update CandidateCubit with new session and reload data
+              if (!context.mounted) return;
+              await context.read<CandidateCubit>().setSessionAndRefresh(session);
+            }
+            
+            // Navigate to main layout
+            if (!context.mounted) return;
             Navigator.pushReplacementNamed(context, AppRoutes.recruitermainlayout);
           }
           if (state.status == LoginStatus.failure) {
@@ -263,9 +300,9 @@ class _LoginPageState extends State<LoginPage> {
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 16),
                               child: Text(
-                                "Or continue with",
+                                "Powered by Srivyn",
                                 style: TextStyle(
-                                  color: Colors.grey.shade500,
+                                  color: Colors.black,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -274,27 +311,27 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                         ),
 
-                        const SizedBox(height: 24),
+                        // const SizedBox(height: 24),
 
-                        // SOCIAL BUTTONS
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _socialButton(
-                              image: AppImage.google,
-                              onTap: () {
-                                debugPrint("Google Login");
-                              },
-                            ),
-                            const SizedBox(width: 20),
-                            _socialButton(
-                              image: AppImage.micro,
-                              onTap: () {
-                                debugPrint("Microsoft Login");
-                              },
-                            ),
-                          ],
-                        ),
+                        // // SOCIAL BUTTONS
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: [
+                        //     _socialButton(
+                        //       image: AppImage.google,
+                        //       onTap: () {
+                        //         debugPrint("Google Login");
+                        //       },
+                        //     ),
+                        //     const SizedBox(width: 20),
+                        //     _socialButton(
+                        //       image: AppImage.micro,
+                        //       onTap: () {
+                        //         debugPrint("Microsoft Login");
+                        //       },
+                        //     ),
+                        //   ],
+                        // ),
                       ],
                     ),
                   ),

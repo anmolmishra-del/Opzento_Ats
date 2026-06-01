@@ -14,6 +14,8 @@ import 'package:opsento_ats/features/interview_schedule/cubit/interview_cubit.da
 import 'package:opsento_ats/features/auth/cubit/login_cubit.dart';
 import 'package:opsento_ats/features/profile/cubit/profile_cubit.dart';
 
+import 'package:opsento_ats/features/candidatefolder/candidate/cubit/candidate_cubit.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -41,6 +43,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => LoginCubit(),
+        ),
+        BlocProvider(
+          create: (_) => CandidateCubit(),
         ),
       ],
       child: MaterialApp(

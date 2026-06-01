@@ -3,9 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:odoo_rpc/odoo_rpc.dart';
 import 'package:opsento_ats/routes/app_routes.dart';
 import 'package:opsento_ats/features/auth/cubit/login_cubit.dart';
 import 'package:opsento_ats/features/auth/state/login_state.dart';
+import 'package:opsento_ats/features/candidatefolder/candidate/cubit/candidate_cubit.dart';
+import 'package:opsento_ats/utils/shared_ref.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -143,7 +146,42 @@ class _SplashPageState extends State<SplashPage>
     if (!mounted) return;
 
     if (cubit.state.status == LoginStatus.success) {
-      Navigator.pushReplacementNamed(context, AppRoutes.recruitermainlayout);
+      // 🔄 UPDATE CANDIDATE CUBIT WITH SAVED SESSION BEFORE NAVIGATION
+      final prefs = SharedPref();
+      final sessionData = await prefs.getObject('session');
+      
+      if (sessionData != null && sessionData is Map && sessionData.isNotEmpty) {
+        // Reconstruct OdooSession from saved data
+        final session = OdooSession(
+          id: sessionData['id']?.toString() ?? '',
+          userId: sessionData['userId'] is int
+              ? sessionData['userId']
+              : int.parse(sessionData['userId']?.toString() ?? '0'),
+          partnerId: sessionData['partnerId'] is int
+              ? sessionData['partnerId']
+              : int.parse(sessionData['partnerId']?.toString() ?? '0'),
+          companyId: sessionData['companyId'] is int
+              ? sessionData['companyId']
+              : int.parse(sessionData['companyId']?.toString() ?? '0'),
+          allowedCompanies: const <Company>[],
+          userLogin: sessionData['userLogin']?.toString() ?? '',
+          userName: sessionData['userName']?.toString() ?? '',
+          userLang: sessionData['userLang']?.toString() ?? "en_US",
+          userTz: sessionData['userTz']?.toString() ?? "UTC",
+          isSystem: sessionData['isSystem'] is bool ? sessionData['isSystem'] : false,
+          dbName: sessionData['dbName']?.toString() ?? 'ftprotech',
+          serverVersion: sessionData['serverVersion']?.toString() ?? "",
+        );
+        
+        // Update CandidateCubit with saved session and reload data
+        if (mounted) {
+          await context.read<CandidateCubit>().setSessionAndRefresh(session);
+        }
+      }
+      
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, AppRoutes.recruitermainlayout);
+      }
     } else {
       Navigator.pushReplacementNamed(context, AppRoutes.login);
     }

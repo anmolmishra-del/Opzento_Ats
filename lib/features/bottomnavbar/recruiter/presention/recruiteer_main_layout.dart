@@ -16,11 +16,21 @@ class RecruiterMainLayout extends StatefulWidget {
 
 class _RecruiterMainLayoutState extends State<RecruiterMainLayout> {
   int currentIndex = 0;
+  late final List<Widget> pages;
 
   @override
   void initState() {
     super.initState();
     _checkAuth();
+    
+    // Initialize pages here to ensure they're created fresh
+    pages = [
+      DashboardPage(),
+      JobPage(isRecruiter: true),
+      CandidatePage(),
+      OfferApprovalPage(),
+      InterviewFeedbackPage(),
+    ];
   }
 
   Future<void> _checkAuth() async {
@@ -37,13 +47,7 @@ class _RecruiterMainLayoutState extends State<RecruiterMainLayout> {
     }
   }
 
-  final List<Widget> pages = [
-    DashboardPage(),
-    JobPage(isRecruiter: true),
-    CandidatePage(),
-    OfferApprovalPage(),
-    InterviewFeedbackPage(),
-  ];
+
 
   final List<_NavItem> navItems = const [
     _NavItem(icon: Icons.home_rounded, activeIcon: Icons.home_rounded, label: "Home"),
@@ -54,6 +58,7 @@ class _RecruiterMainLayoutState extends State<RecruiterMainLayout> {
   ];
 
   void onTabChanged(int index) {
+    print("[DEBUG] RecruiterMainLayout: Tab changed from $currentIndex to $index");
     setState(() => currentIndex = index);
   }
 
