@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -290,6 +291,7 @@ class CandidatePage extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
+        border:Border(left: BorderSide(color:   Colors.primaries[candidate.userId.hashCode % Colors.primaries.length], width: 4)),
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         boxShadow: const [
@@ -299,7 +301,7 @@ class CandidatePage extends StatelessWidget {
             offset: Offset(0, 4),
           ),
         ],
-        border: Border.all(color: const Color(0xFFF1F5F9), width: 1.5),
+
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
@@ -340,8 +342,29 @@ class CandidatePage extends StatelessWidget {
                           backgroundColor: Colors.white,
                           child: CircleAvatar(
                             radius: 24,
-                            backgroundImage: NetworkImage(
-                              "https://i.pravatar.cc/150?u=${candidate.emailFrom}",
+                            backgroundColor: Colors.grey[100],
+                            child: ClipOval(
+                              child: candidate.image != null && candidate.image!.isNotEmpty
+                                  ? Image.memory(
+                                      base64Decode(candidate.image!),
+                                      width: 48,
+                                      height: 48,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Image.network(
+                                          "https://i.pravatar.cc/150?u=${candidate.emailFrom}",
+                                          width: 48,
+                                          height: 48,
+                                          fit: BoxFit.cover,
+                                        );
+                                      },
+                                    )
+                                  : Image.network(
+                                      "https://i.pravatar.cc/150?u=${candidate.emailFrom}",
+                                      width: 48,
+                                      height: 48,
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
                           ),
                         ),
@@ -382,6 +405,39 @@ class CandidatePage extends StatelessWidget {
                                 );
                               }),
                             ),
+                            if (candidate.categIds.isNotEmpty) ...[
+                              const SizedBox(height: 6),
+                              Wrap(
+                                spacing: 4,
+                                runSpacing: 4,
+                                children: candidate.categIds.take(3).map((tag) {
+                                  final isIt = tag.toLowerCase() == 'it';
+                                  final isReserve = tag.toLowerCase() == 'reserve';
+                                  final bgColor = isIt 
+                                      ? const Color(0xFFEEF2FF) 
+                                      : (isReserve ? const Color(0xFFFFF7ED) : const Color(0xFFF1F5F9));
+                                  final textColor = isIt 
+                                      ? const Color(0xFF4F46E5) 
+                                      : (isReserve ? const Color(0xFFEA580C) : const Color(0xFF475569));
+                                  
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                    decoration: BoxDecoration(
+                                      color: bgColor,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      tag,
+                                      style: TextStyle(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.bold,
+                                        color: textColor,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ],
                           ],
                         ),
                       ),

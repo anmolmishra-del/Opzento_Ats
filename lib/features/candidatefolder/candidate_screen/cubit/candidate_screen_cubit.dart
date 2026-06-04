@@ -28,6 +28,43 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       final OdooService svc = OdooService(ApiConfig.baseUrl);
       await svc.ensureSession();
+
+      // 0. Check if candidate has a direct resume field value
+      bool hasDirectResume = false;
+      if (candidateId != null) {
+        try {
+          print("[ProfileCubit] Querying hr.candidate direct resume field for candidate: $candidateId...");
+          final candInfo = await svc.executeModelMethod(
+            'hr.candidate',
+            'read',
+            [[candidateId]],
+            kwargs: {
+              'fields': ['resume'],
+            },
+          );
+          if (candInfo is List && candInfo.isNotEmpty) {
+            final resumeField = candInfo[0]['resume'];
+            if (resumeField != null && resumeField != false && resumeField.toString().isNotEmpty) {
+              hasDirectResume = true;
+              print("[ProfileCubit] Candidate has direct resume binary field populated!");
+            }
+          }
+        } catch (e) {
+          print("[ProfileCubit] Error reading direct resume field: $e");
+        }
+      }
+
+      if (hasDirectResume) {
+        final sessionToken = svc.sessionId?.id ?? '';
+        final directResumeUrl = "${ApiConfig.baseUrl}/web/content?model=hr.candidate&id=$candidateId&field=resume&download=true";
+        print("[ProfileCubit] Found direct candidate resume! Dynamic URL: $directResumeUrl");
+        emit(state.copyWith(
+          loading: false,
+          pdfUrl: directResumeUrl,
+          sessionToken: sessionToken,
+        ));
+        return;
+      }
       
       List<dynamic> attachments = [];
 
@@ -143,9 +180,11 @@ class ProfileCubit extends Cubit<ProfileState> {
         final dynamicResumeUrl = "${ApiConfig.baseUrl}/web/content/$attachmentId?download=true";
         print("[ProfileCubit] Found Odoo resume attachment! Dynamic URL: $dynamicResumeUrl");
         
+        final sessionToken = svc.sessionId?.id ?? '';
         emit(state.copyWith(
           loading: false,
           pdfUrl: dynamicResumeUrl,
+          sessionToken: sessionToken,
         ));
       } else {
         print("[ProfileCubit] No Odoo resume attachment found. Falling back to default.");
@@ -184,8 +223,18 @@ class ProfileCubit extends Cubit<ProfileState> {
 
       final filePath = "${dir!.path}/resume.pdf";
 
+      final OdooService svc = OdooService(ApiConfig.baseUrl);
+      await svc.ensureSession();
+      final sessionToken = svc.sessionId?.id ?? '';
+
       // 2️⃣ Download file
-      await Dio().download(url, filePath);
+      await Dio().download(
+        url,
+        filePath,
+        options: Options(
+          headers: sessionToken.isNotEmpty ? {'Cookie': 'session_id=$sessionToken'} : null,
+        ),
+      );
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Saved at: $filePath")),

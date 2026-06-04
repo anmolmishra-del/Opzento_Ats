@@ -59,6 +59,9 @@ class HrCandidate {
   // One2many(hr.candidate.skill)
   final List<HrCandidateSkill> skills;
 
+  // Base64 encoded profile picture from Odoo backend
+  final String? image;
+
   // Computed field caches (Odoo-like)
   final double matchingSkillPercentage; // _compute_matching_skill_ids
   final List<String> computedSkillsList; // _compute_skill_ids
@@ -83,6 +86,7 @@ class HrCandidate {
     this.resume,
     required this.companyId,
     required this.skills,
+    this.image,
     this.matchingSkillPercentage = 0.0,
     this.computedSkillsList = const [],
     this.stage = "Applied",
@@ -167,6 +171,7 @@ class HrCandidate {
     String? resume,
     String? companyId,
     List<HrCandidateSkill>? skills,
+    String? image,
     double? matchingSkillPercentage,
     List<String>? computedSkillsList,
     String? stage,
@@ -190,6 +195,7 @@ class HrCandidate {
       resume: resume ?? this.resume,
       companyId: companyId ?? this.companyId,
       skills: skills ?? this.skills,
+      image: image ?? this.image,
       matchingSkillPercentage: matchingSkillPercentage ?? this.matchingSkillPercentage,
       computedSkillsList: computedSkillsList ?? this.computedSkillsList,
       stage: stage ?? this.stage,

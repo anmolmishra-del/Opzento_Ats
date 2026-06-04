@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opsento_ats/utils/shared_ref.dart';
-
+import 'package:opsento_ats/core/services/odoo_service.dart';
+import 'package:opsento_ats/core/constants/api_config.dart';
 import 'package:opsento_ats/features/dashboard/repository/service.dart';
-
 import '../state/dashboard_state.dart';
 
 class DashboardCubit extends Cubit<DashboardState> {
@@ -26,8 +26,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   }
 
   Future<void> loadDashboard() async {
-    print("LOAD DASHBOARD STARTED");
-
+    print("[DashboardCubit] loadDashboard() started.");
     emit(
       state.copyWith(
         isLoading: true,
@@ -38,22 +37,132 @@ class DashboardCubit extends Cubit<DashboardState> {
     try {
       final prefs = SharedPref();
       final userData = await prefs.getObject('user_profile');
-      String name = "";
-      
+      String name = "Recruiter";
       if (userData != null && userData is Map && userData.isNotEmpty) {
-        name = userData['name']?.toString() ?? "";
+        name = userData['name']?.toString() ?? "Recruiter";
       }
+
+      final service = OdooService(ApiConfig.baseUrl);
+      await service.ensureSession();
+
+      // 1. Get valid fields for hr.candidate dynamically to prevent Odoo ValueError
+      Map<String, dynamic>? candidateFieldsInfo;
+      try {
+        final rawFields = await service.executeModelMethod(
+          'hr.candidate',
+          'fields_get',
+          [],
+          kwargs: {'attributes': ['type']},
+        );
+        if (rawFields is Map) {
+          candidateFieldsInfo = Map<String, dynamic>.from(rawFields);
+        }
+      } catch (fe) {
+        print("[DashboardCubit] fields_get failed for hr.candidate: $fe");
+      }
+
+      final List<String> activeCandFields = ['id'];
+      if (candidateFieldsInfo != null && candidateFieldsInfo.containsKey('stage_id')) {
+        activeCandFields.add('stage_id');
+      }
+
+      print("[DashboardCubit] Querying hr.candidate records for funnel stats with fields $activeCandFields...");
+      final candidatesRes = await service.executeModelMethod(
+        'hr.candidate',
+        'search_read',
+        [[]],
+        kwargs: {
+          'fields': activeCandFields,
+        },
+      );
+
+      // 2. Fetch Jobs (hr.job) to compute open positions
+      print("[DashboardCubit] Querying hr.job records for positions stats...");
+      final jobsRes = await service.executeModelMethod(
+        'hr.job',
+        'search_read',
+        [[]],
+        kwargs: {
+          'fields': ['id'],
+        },
+      );
+
+      int totalCandidates = 0;
+      int openPositions = 0;
+      
+      int appliedCount = 0;
+      int screeningCount = 0;
+      int interviewCount = 0;
+      int offerCount = 0;
+      int hiredCount = 0;
+      int rejectedCount = 0;
+
+      if (jobsRes is List) {
+        openPositions = jobsRes.length;
+      }
+
+      if (candidatesRes is List) {
+        totalCandidates = candidatesRes.length;
+        for (var c in candidatesRes) {
+          final stageVal = c['stage_id'];
+          final stageName = stageVal is List && stageVal.length > 1 
+              ? stageVal[1].toString().toLowerCase() 
+              : 'applied';
+          
+          if (stageName.contains('screening')) {
+            screeningCount++;
+          } else if (stageName.contains('interview') || stageName.contains('tech') || stageName.contains('hr')) {
+            interviewCount++;
+          } else if (stageName.contains('offer')) {
+            offerCount++;
+          } else if (stageName.contains('hired') || stageName.contains('joined')) {
+            hiredCount++;
+          } else if (stageName.contains('rejected') || stageName.contains('refused') || stageName.contains('cancel')) {
+            rejectedCount++;
+          } else {
+            appliedCount++;
+          }
+        }
+      }
+
+      // Map statistics to the DashboardState lists:
+      // Index mappings:
+      // 0: Open Positions
+      // 1: New Applications (total candidates)
+      // 2: Interviews Today
+      // 3: Offers Pending
+      // 4: Hired This Month
+      // 5: Rejected
+      final counts = [
+        openPositions,
+        totalCandidates,
+        interviewCount,
+        offerCount,
+        hiredCount,
+        rejectedCount,
+      ];
+
+      // Funnel mapping (Applied, Screening, Interview, Offer, Hired)
+      final chartValues = [
+        appliedCount.toDouble(),
+        screeningCount.toDouble(),
+        interviewCount.toDouble(),
+        offerCount.toDouble(),
+        hiredCount.toDouble(),
+      ];
 
       emit(
         state.copyWith(
           isLoading: false,
           name: name,
+          counts: counts,
+          chartValues: chartValues,
           error: null,
         ),
       );
+      print("[DashboardCubit] loadDashboard() completed successfully.");
     } catch (e) {
-      print("DASHBOARD ERROR");
-      print(e);
+      print("[DashboardCubit] Error: $e");
       emit(
         state.copyWith(
           isLoading: false,
@@ -61,73 +170,6 @@ class DashboardCubit extends Cubit<DashboardState> {
         ),
       );
     }
-
-//     try {
-//       final data =
-//           await repository.getDashboardStats();
-//
-//       print("API DATA => $data");
-//
-//       final counts =
-//           List<int>.from(
-//         data['counts'] ?? [],
-//       );
-//
-//       final chartValues =
-//           List<double>.from(
-//         (data['chartValues'] ?? [])
-//             .map(
-//               (e) => (e as num).toDouble(),
-//             ),
-//       );
-//
-//       print("COUNTS => $counts");
-//
-//       print(
-//         "CHART VALUES => $chartValues",
-//       );
-//
-//       // MAKE BOTH LISTS SAME LENGTH
-//       while (chartValues.length <
-//           counts.length) {
-//         chartValues.add(0);
-//       }
-//
-//       emit(
-//         state.copyWith(
-//           isLoading: false,
-//
-//           name:
-//               data['recruiterName'] ??
-//                   "",
-//
-//           counts: counts,
-//
-//           chartValues: chartValues,
-//
-//           error: null,
-//         ),
-//       );
-// print(data);
-// print(data['counts']);
-// print(data['chartValues']);
-//       print(
-//         "STATE UPDATED SUCCESS",
-//       );
-//     } catch (e) {
-//       print("DASHBOARD ERROR");
-//
-//       print(e);
-//
-//       emit(
-//         state.copyWith(
-//           isLoading: false,
-//
-//           error:
-//               e.toString(),
-//         ),
-//       );
-//     }
   }
 
   void refreshDashboard() {

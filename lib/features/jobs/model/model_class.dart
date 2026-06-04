@@ -30,6 +30,16 @@ class JobData {
 
   final List<String> requirements;
 
+  final bool isPublished;
+
+  final String priority;
+
+  final String company;
+
+  final int noOfRecruitment;
+
+  final int noOfEligibleSubmissions;
+
   JobData({
     this.id,
     required this.title,
@@ -46,6 +56,11 @@ class JobData {
     this.description = '',
     this.responsibilities = const [],
     this.requirements = const [],
+    this.isPublished = false,
+    this.priority = 'Medium',
+    this.company = '',
+    this.noOfRecruitment = 0,
+    this.noOfEligibleSubmissions = 0,
   });
 
   factory JobData.fromJson(
@@ -118,6 +133,31 @@ class JobData {
           List<String>.from(
         json['requirements'] ?? [],
       ),
+
+      isPublished:
+          json['is_published'] ??
+          json['website_published'] ??
+          false,
+
+      priority:
+          json['priority'] ??
+          json['job_priority'] ??
+          'Medium',
+
+      company:
+          json['company'] ??
+          json['company_name'] ??
+          "",
+
+      noOfRecruitment:
+          json['no_of_recruitment'] ??
+          json['noOfRecruitment'] ??
+          0,
+
+      noOfEligibleSubmissions:
+          json['no_of_eligible_submissions'] ??
+          json['noOfEligibleSubmissions'] ??
+          0,
     );
   }
 
@@ -154,6 +194,16 @@ class JobData {
       'responsibilities': responsibilities,
 
       'requirements': requirements,
+
+      'is_published': isPublished,
+
+      'priority': priority,
+
+      'company': company,
+
+      'no_of_recruitment': noOfRecruitment,
+
+      'no_of_eligible_submissions': noOfEligibleSubmissions,
     };
   }
 }

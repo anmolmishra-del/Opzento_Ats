@@ -74,6 +74,9 @@ class _ResumePageState extends State<ResumePage> {
                             // borderRadius: BorderRadius.circular(20),
                             child: SfPdfViewer.network(
                               state.pdfUrl!,
+                              headers: state.sessionToken != null && state.sessionToken!.isNotEmpty
+                                  ? {'Cookie': 'session_id=${state.sessionToken}'}
+                                  : null,
                             ),
                           ),
                   ),

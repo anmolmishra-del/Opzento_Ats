@@ -28,7 +28,7 @@ class _CandidateProfilePageState extends State<CandidateProfilePage> with Single
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -51,7 +51,7 @@ class _CandidateProfilePageState extends State<CandidateProfilePage> with Single
           final candidate = parentState.selectedCandidate ?? parentState.candidates.first;
           
           print("[DEBUG] Displaying profile for: ${candidate.fullName} (${candidate.emailFrom})");
-
+          
           final double percentage = candidate.matchingSkillPercentage;
           Color matchColor = Colors.orange;
           if (percentage >= 70) {
@@ -102,13 +102,6 @@ class _CandidateProfilePageState extends State<CandidateProfilePage> with Single
               //                 content: Text("Moved to stage: $newStage"),
               //                 backgroundColor: AppColors.primary,
               //               ),
-              //             );
-              //           }
-              //         },
-              //       ),
-              //     ),
-              //   ),
-              // ],
             ),
             body: Column(
               children: [
@@ -124,7 +117,29 @@ class _CandidateProfilePageState extends State<CandidateProfilePage> with Single
                           CircleAvatar(
                             radius: 42,
                             backgroundColor: AppColors.primary.withOpacity(0.1),
-                            backgroundImage: NetworkImage("https://i.pravatar.cc/150?u=${candidate.emailFrom}"),
+                            child: ClipOval(
+                              child: candidate.image != null && candidate.image!.isNotEmpty
+                                  ? Image.memory(
+                                      base64Decode(candidate.image!),
+                                      width: 84,
+                                      height: 84,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Image.network(
+                                          "https://i.pravatar.cc/150?u=${candidate.emailFrom}",
+                                          width: 84,
+                                          height: 84,
+                                          fit: BoxFit.cover,
+                                        );
+                                      },
+                                    )
+                                  : Image.network(
+                                      "https://i.pravatar.cc/150?u=${candidate.emailFrom}",
+                                      width: 84,
+                                      height: 84,
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
                           ),
                           const SizedBox(width: 20),
                           Expanded(
@@ -170,25 +185,6 @@ class _CandidateProfilePageState extends State<CandidateProfilePage> with Single
                               ],
                             ),
                           ),
-                          // // Skill score widget
-                          // Container(
-                          //   height: 64,
-                          //   width: 64,
-                          //   decoration: BoxDecoration(
-                          //     shape: BoxShape.circle,
-                          //     color: matchColor.withOpacity(0.1),
-                          //     border: Border.all(color: matchColor, width: 2),
-                          //   ),
-                          //   alignment: Alignment.center,
-                          //   child: Text(
-                          //     "${percentage.toInt()}%",
-                          //     style: TextStyle(
-                          //       fontSize: 16,
-                          //       fontWeight: FontWeight.w900,
-                          //       color: matchColor,
-                          //     ),
-                          //   ),
-                          // ),
                         ],
                       ),
                     ],
@@ -207,8 +203,8 @@ class _CandidateProfilePageState extends State<CandidateProfilePage> with Single
                     labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                     tabs: const [
                       Tab(text: "Contact & Bio"),
-                      Tab(text: "Skills Mapping"),
-                      Tab(text: "Meta & Actions"),
+                      // Combined Skills and Meta into one tab (slide)
+                      Tab(text: "Skills & Meta"),
                     ],
                   ),
                 ),
@@ -220,10 +216,8 @@ class _CandidateProfilePageState extends State<CandidateProfilePage> with Single
                     children: [
                       // TAB 1: Contact details
                       _buildContactTab(candidate),
-                      // TAB 2: Skills with dynamic interactive addition
-                      _buildSkillsTab(context, candidate, candCubit),
-                      // TAB 3: Odoo payload generation & actions
-                      _buildMetaTab(context, candidate, candCubit),
+                      // TAB 2: Skills and Meta Information combined in a single slide (view-only)
+                      _buildSkillsAndMetaTab(context, candidate, candCubit),
                     ],
                   ),
                 ),
@@ -258,10 +252,26 @@ class _CandidateProfilePageState extends State<CandidateProfilePage> with Single
     );
   }
 
-  Widget _buildSkillsTab(BuildContext context, HrCandidate candidate, CandidateCubit cubit) {
+  /// 🧬 Combined Skills & Meta Information Tab (Single Slide View)
+  /// This view displays both Candidate Status details (Meta info) and the Skills List.
+  /// Note: Skills are displayed as VIEW-ONLY (no add or delete buttons).
+  Widget _buildSkillsAndMetaTab(BuildContext context, HrCandidate candidate, CandidateCubit cubit) {
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
+        // 1. CANDIDATE STATUS INFO (Formerly Meta & Actions Tab)
+        _buildInfoCard("Candidate Status Info", [
+          _buildDetailRow(Icons.calendar_month_outlined, "Availability Date", DateFormat('dd MMMM yyyy').format(candidate.availability)),
+          _buildDetailRow(Icons.bookmark_outline, "Recruitment Stage", candidate.stage),
+          // _buildDetailRow(Icons.app_registration_outlined, "Job Application Link", candidate.linkedApplicationId ?? "None (Draft)"),
+        ]),
+        if (candidate.categIds.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          _buildTagsCard(candidate.categIds),
+        ],
+        const SizedBox(height: 24),
+
+        // 2. ODOO SKILLS LIST SECTION (Formerly Skills Mapping Tab, now VIEW-ONLY)
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: const [
@@ -281,7 +291,6 @@ class _CandidateProfilePageState extends State<CandidateProfilePage> with Single
           )
         else
           ...candidate.skills.map((skill) {
-            print('-------->>>>>>${candidate.skills}');
             return Container(
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -334,301 +343,11 @@ class _CandidateProfilePageState extends State<CandidateProfilePage> with Single
                       ],
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent, size: 20),
-                    onPressed: () {
-                      final updated = List<HrCandidateSkill>.from(candidate.skills)..remove(skill);
-                      cubit.updateCandidateSkills(candidate.emailFrom, updated);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Skill record removed")),
-                      );
-                    },
-                  ),
+                  // Note: The delete button/IconButton has been removed to enforce VIEW-ONLY mode.
                 ],
               ),
             );
           }).toList(),
-        const SizedBox(height: 16),
-
-        // INLINE SKILLS SELECTOR FOR PROFILE DOSSIER
-        // Container(
-        //   padding: const EdgeInsets.all(16),
-        //   decoration: BoxDecoration(
-        //     color: Colors.white,
-        //     borderRadius: BorderRadius.circular(20),
-        //     border: Border.all(color: const Color(0xFFE2E8F0)),
-        //     boxShadow: const [
-        //       BoxShadow(
-        //         color: Color(0x05000000),
-        //         blurRadius: 10,
-        //         offset: Offset(0, 4),
-        //       ),
-        //     ],
-        //   ),
-        //   child: Column(
-        //     crossAxisAlignment: CrossAxisAlignment.start,
-        //     children: [
-        //       Row(
-        //         children: [
-        //           const Icon(Icons.add_moderator_rounded, size: 18, color: AppColors.primary),
-        //           const SizedBox(width: 6),
-        //           const Text(
-        //             "Add Custom Skill Inline",
-        //             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF475569)),
-        //           ),
-        //         ],
-        //       ),
-        //       const SizedBox(height: 12),
-        //       // Skill Type Dropdown
-        //       DropdownButtonFormField<String>(
-        //         value: cubit.state.skillTypes.map((e) => e['name']?.toString() ?? '').toSet().contains(selectedSkillType) 
-        //             ? selectedSkillType 
-        //             : (cubit.state.skillTypes.isNotEmpty ? cubit.state.skillTypes.map((e) => e['name']?.toString() ?? '').toSet().first : null),
-        //         decoration: const InputDecoration(
-        //           labelText: "Skill Type",
-        //           fillColor: Color(0xFFF8FAFC),
-        //           filled: true,
-        //         ),
-        //         items: cubit.state.skillTypes
-        //             .map((e) => e['name']?.toString() ?? '')
-        //             .toSet()
-        //             .map((name) {
-        //           return DropdownMenuItem<String>(
-        //             value: name,
-        //             child: Text(name),
-        //           );
-        //         }).toList(),
-        //         onChanged: (v) {
-        //           if (v != null) {
-        //             setState(() => selectedSkillType = v);
-        //           }
-        //         },
-        //       ),
-        //       const SizedBox(height: 12),
-        //       // Skill Name Field (Autocomplete with dynamic suggestions based on Skill Type + manual typing)
-        //       LayoutBuilder(
-        //         builder: (context, constraints) {
-        //           return Autocomplete<String>(
-        //             optionsBuilder: (TextEditingValue textEditingValue) {
-        //               // Filter skills where the skill_type_name matches the selectedSkillType
-        //               final typeToMatch = selectedSkillType.isNotEmpty
-        //                   ? selectedSkillType
-        //                   : (cubit.state.skillTypes.isNotEmpty
-        //                       ? cubit.state.skillTypes.first['name']?.toString() ?? ''
-        //                       : '');
-        //               final suggestions = cubit.state.skills
-        //                   .where((s) => s['skill_type_name']?.toString().toLowerCase() == typeToMatch.toLowerCase())
-        //                   .map((s) => s['name']?.toString() ?? '')
-        //                   .where((name) => name.isNotEmpty)
-        //                   .toSet()
-        //                   .toList();
-                      
-        //               if (textEditingValue.text.isEmpty) {
-        //                 return suggestions;
-        //               }
-        //               return suggestions.where((String option) {
-        //                 return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
-        //               });
-        //             },
-        //             displayStringForOption: (String option) => option,
-        //             fieldViewBuilder: (BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
-        //               // Keep controller content synchronized with current skillName state
-        //               WidgetsBinding.instance.addPostFrameCallback((_) {
-        //                 if (skillName.isEmpty && textEditingController.text.isNotEmpty) {
-        //                   textEditingController.clear();
-        //                 } else if (skillName.isNotEmpty && textEditingController.text != skillName) {
-        //                   textEditingController.text = skillName;
-        //                 }
-        //               });
-        //               return TextFormField(
-        //                 controller: textEditingController,
-        //                 focusNode: focusNode,
-        //                 decoration: const InputDecoration(
-        //                   labelText: "Skill Name",
-        //                   hintText: "e.g. Flutter, Dart, Python",
-        //                   fillColor: Color(0xFFF8FAFC),
-        //                   filled: true,
-        //                 ),
-        //                 onChanged: (v) {
-        //                   setState(() {
-        //                     skillName = v;
-        //                   });
-        //                 },
-        //               );
-        //             },
-        //             optionsViewBuilder: (BuildContext context, AutocompleteOnSelected<String> onSelected, Iterable<String> options) {
-        //               return Align(
-        //                 alignment: Alignment.topLeft,
-        //                 child: Material(
-        //                   elevation: 4.0,
-        //                   borderRadius: BorderRadius.circular(8),
-        //                   child: Container(
-        //                     width: constraints.maxWidth,
-        //                     constraints: const BoxConstraints(maxHeight: 200),
-        //                     child: ListView.builder(
-        //                       padding: EdgeInsets.zero,
-        //                       shrinkWrap: true,
-        //                       itemCount: options.length,
-        //                       itemBuilder: (BuildContext context, int index) {
-        //                         final String option = options.elementAt(index);
-        //                         return ListTile(
-        //                           title: Text(option, style: const TextStyle(fontSize: 14)),
-        //                           onTap: () {
-        //                             onSelected(option);
-        //                           },
-        //                         );
-        //                       },
-        //                     ),
-        //                   ),
-        //                 ),
-        //               );
-        //             },
-        //             onSelected: (String selection) {
-        //               setState(() {
-        //                 skillName = selection;
-        //               });
-        //             },
-        //           );
-        //         }
-        //       ),
-        //       const SizedBox(height: 12),
-        //       // Skill Level Dropdown
-        //       DropdownButtonFormField<String>(
-        //         value: cubit.state.skillLevels.map((e) => e['name']?.toString() ?? '').toSet().contains(skillLevel) 
-        //             ? skillLevel 
-        //             : (cubit.state.skillLevels.isNotEmpty ? cubit.state.skillLevels.map((e) => e['name']?.toString() ?? '').toSet().first : null),
-        //         decoration: const InputDecoration(
-        //           labelText: "Skill Level",
-        //           fillColor: Color(0xFFF8FAFC),
-        //           filled: true,
-        //         ),
-        //         items: cubit.state.skillLevels
-        //             .map((e) => e['name']?.toString() ?? '')
-        //             .toSet()
-        //             .map((name) {
-        //           return DropdownMenuItem<String>(
-        //             value: name,
-        //             child: Text(name),
-        //           );
-        //         }).toList(),
-        //         onChanged: (v) {
-        //           if (v != null) {
-        //             setState(() => skillLevel = v);
-        //           }
-        //         },
-        //       ),
-        //       const SizedBox(height: 14),
-        //       // Add Skill Button
-        //       SizedBox(
-        //         width: double.infinity,
-        //         child: ElevatedButton.icon(
-        //           style: ElevatedButton.styleFrom(
-        //             backgroundColor: AppColors.primary,
-        //             padding: const EdgeInsets.symmetric(vertical: 14),
-        //             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        //           ),
-        //           onPressed: skillName.trim().isEmpty 
-        //               ? null 
-        //               : () {
-        //                   final type = selectedSkillType.isNotEmpty 
-        //                       ? selectedSkillType 
-        //                       : (cubit.state.skillTypes.isNotEmpty 
-        //                           ? cubit.state.skillTypes.first['name']?.toString() ?? 'Languages'
-        //                           : 'Languages');
-                          
-        //                   final level = cubit.state.skillLevels.any((e) => e['name'] == skillLevel) 
-        //                       ? skillLevel 
-        //                       : (cubit.state.skillLevels.isNotEmpty 
-        //                           ? cubit.state.skillLevels.first['name']?.toString() ?? 'Intermediate'
-        //                           : 'Intermediate');
-
-        //                   final newSkill = HrCandidateSkill(
-        //                     skillTypeId: type,
-        //                     skillId: skillName.trim(),
-        //                     skillLevel: level,
-        //                   );
-        //                   final updated = List<HrCandidateSkill>.from(candidate.skills)..add(newSkill);
-        //                   cubit.updateCandidateSkills(candidate.emailFrom, updated);
-                          
-        //                   setState(() {
-        //                     skillName = '';
-        //                     skillNameController.clear();
-        //                   });
-                          
-        //                   ScaffoldMessenger.of(context).showSnackBar(
-        //                     const SnackBar(
-        //                       content: Text("Skill added inline!"),
-        //                       duration: Duration(milliseconds: 800),
-        //                     ),
-        //                   );
-        //                 },
-        //           icon: const Icon(Icons.add_circle_outline_rounded, color: Colors.white, size: 18),
-        //           label: const Text(
-        //             "Add Skill Line Inline",
-        //             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
-        //           ),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-      ],
-    );
-  }
-
-  Widget _buildMetaTab(BuildContext context, HrCandidate candidate, CandidateCubit cubit) {
-    return ListView(
-      padding: const EdgeInsets.all(20),
-      children: [
-        _buildInfoCard("Candidate Status Info", [
-          _buildDetailRow(Icons.calendar_month_outlined, "Availability Date", DateFormat('dd MMMM yyyy').format(candidate.availability)),
-          _buildDetailRow(Icons.bookmark_outline, "Recruitment Stage", candidate.stage),
-          _buildDetailRow(Icons.app_registration_outlined, "Job Application Link", candidate.linkedApplicationId ?? "None (Draft)"),
-        ]),
-        const SizedBox(height: 20),
-        // // Display payload button
-        // Container(
-        //   padding: const EdgeInsets.all(18),
-        //   decoration: BoxDecoration(
-        //     color: const Color(0xFF0F172A),
-        //     borderRadius: BorderRadius.circular(20),
-        //   ),
-        //   child: Column(
-        //     crossAxisAlignment: CrossAxisAlignment.start,
-        //     children: [
-        //       const Row(
-        //         children: [
-        //           Icon(Icons.terminal_rounded, color: Color(0xFF38BDF8), size: 20),
-        //           SizedBox(width: 8),
-        //           Text(
-        //             "Odoo employee_create_vals payload",
-        //             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
-        //           ),
-        //         ],
-        //       ),
-        //       const SizedBox(height: 12),
-        //       Container(
-        //         width: double.infinity,
-        //         padding: const EdgeInsets.all(12),
-        //         decoration: BoxDecoration(
-        //           color: const Color(0xFF1E293B),
-        //           borderRadius: BorderRadius.circular(10),
-        //         ),
-        //         child: SingleChildScrollView(
-        //           scrollDirection: Axis.horizontal,
-        //           child: Text(
-        //             const JsonEncoder.withIndent('  ').convert(candidate.getEmployeeCreateVals()),
-        //             style: const TextStyle(
-        //               fontFamily: "monospace",
-        //               color: Color(0xFF38BDF8),
-        //               fontSize: 11,
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
       ],
     );
   }
@@ -730,6 +449,80 @@ class _CandidateProfilePageState extends State<CandidateProfilePage> with Single
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTagsCard(List<String> tags) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x050F172A),
+            blurRadius: 16,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(Icons.local_offer_outlined, size: 18, color: Color(0xFF64748B)),
+              SizedBox(width: 8),
+              Text(
+                "Candidate Tags",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF475569),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: tags.map((tag) {
+              final isIt = tag.toLowerCase() == 'it';
+              final isReserve = tag.toLowerCase() == 'reserve';
+              
+              final bgColor = isIt 
+                  ? const Color(0xFFEEF2FF) 
+                  : (isReserve ? const Color(0xFFFFF7ED) : const Color(0xFFF1F5F9));
+              final textColor = isIt 
+                  ? const Color(0xFF4F46E5) 
+                  : (isReserve ? const Color(0xFFEA580C) : const Color(0xFF475569));
+              final borderColor = isIt 
+                  ? const Color(0xFFC7D2FE) 
+                  : (isReserve ? const Color(0xFFFED7AA) : const Color(0xFFE2E8F0));
+
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: bgColor,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: borderColor),
+                ),
+                child: Text(
+                  tag,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: textColor,
+                  ),
+                ),
+              );
+            }).toList(),
           ),
         ],
       ),

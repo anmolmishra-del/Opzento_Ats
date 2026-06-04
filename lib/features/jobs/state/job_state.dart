@@ -9,6 +9,10 @@ class JobState {
 
   final List<JobData> jobs;
 
+  final bool isLoading;
+
+  final String? error;
+
   const JobState({
 
     required this.selectedTab,
@@ -16,17 +20,25 @@ class JobState {
     required this.searchQuery,
 
     required this.jobs,
+
+    required this.isLoading,
+
+    this.error,
   });
 
   factory JobState.initial() {
 
-    return JobState(
+    return const JobState(
 
       selectedTab: "All",
 
       searchQuery: "",
 
       jobs: [],
+
+      isLoading: false,
+
+      error: null,
     );
   }
 
@@ -37,6 +49,10 @@ class JobState {
     String? searchQuery,
 
     List<JobData>? jobs,
+
+    bool? isLoading,
+
+    String? error,
 
   }) {
 
@@ -50,6 +66,12 @@ class JobState {
 
       jobs:
           jobs ?? this.jobs,
+
+      isLoading:
+          isLoading ?? this.isLoading,
+
+      error:
+          error, // Allow resetting to null, or keep last if needed. Here we can pass error explicitly
     );
   }
 }

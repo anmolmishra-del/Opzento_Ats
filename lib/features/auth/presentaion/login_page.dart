@@ -6,8 +6,8 @@ import 'package:opsento_ats/features/forget_password/presention/forget_password_
 import 'package:opsento_ats/routes/app_routes.dart';
 import 'package:opsento_ats/features/auth/state/login_state.dart';
 import 'package:opsento_ats/features/candidatefolder/candidate/cubit/candidate_cubit.dart';
+import 'package:opsento_ats/features/profile/cubit/profile_cubit.dart';
 import 'package:opsento_ats/utils/shared_ref.dart';
-
 import '../cubit/login_cubit.dart';
 
 class LoginPage extends StatefulWidget {
@@ -55,12 +55,13 @@ class _LoginPageState extends State<LoginPage> {
                 serverVersion: sessionData['serverVersion']?.toString() ?? "",
               );
               
-              // Update CandidateCubit with new session and reload data
+              // Update CandidateCubit and RecruiterProfileCubit in the background
               if (!context.mounted) return;
-              await context.read<CandidateCubit>().setSessionAndRefresh(session);
+              context.read<CandidateCubit>().setSessionAndRefresh(session);
+              context.read<RecruiterProfileCubit>().getProfile();
             }
             
-            // Navigate to main layout
+            // Navigate to main layout immediately (removing the 3-second block)
             if (!context.mounted) return;
             Navigator.pushReplacementNamed(context, AppRoutes.recruitermainlayout);
           }

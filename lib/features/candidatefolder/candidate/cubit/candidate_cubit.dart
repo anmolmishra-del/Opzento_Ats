@@ -1,9 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:odoo_rpc/odoo_rpc.dart';
 import 'package:opsento_ats/core/services/odoo_service.dart';
 import 'package:opsento_ats/core/constants/api_config.dart';
 import '../state/candidate_state.dart';
 import '../state/hr_candidate_model.dart';
+
 
 class CandidateCubit extends Cubit<CandidateState> {
   late OdooService _svc;
@@ -38,6 +41,57 @@ class CandidateCubit extends Cubit<CandidateState> {
     print("[CandidateCubit] setSessionAndRefresh() completed. Data reloaded.");
   }
 
+  bool _isValidRasterImage(String? base64Str) {
+    if (base64Str == null || base64Str.isEmpty) return false;
+    var cleanStr = base64Str.trim();
+    if (cleanStr == 'false' || cleanStr == 'null') return false;
+    if (cleanStr.contains(',')) {
+      cleanStr = cleanStr.split(',').last;
+    }
+    cleanStr = cleanStr.replaceAll(RegExp(r'\s+'), '');
+    if (cleanStr.isEmpty) return false;
+
+    // Check if it's an SVG (starts with `<svg` or `<?xml`)
+    // `<svg` in base64 starts with `PHN2Zy` or `PHN2Z`
+    // `<?xml` in base64 starts with `PD94bW`
+    if (cleanStr.startsWith('PHN2Z') || cleanStr.startsWith('PD94bW')) {
+      print("[CandidateCubit] Image is SVG/XML placeholder, skipping raster load.");
+      return false;
+    }
+
+    try {
+      final bytes = base64Decode(cleanStr);
+      if (bytes.isEmpty) return false;
+
+      if (bytes.length > 4) {
+        final isPng = bytes[0] == 137 && bytes[1] == 80 && bytes[2] == 78 && bytes[3] == 71;
+        final isJpeg = bytes[0] == 255 && bytes[1] == 216 && bytes[2] == 255;
+        final isGif = bytes[0] == 71 && bytes[1] == 73 && bytes[2] == 70;
+        final isWebp = bytes[0] == 82 && bytes[1] == 73 && bytes[2] == 70 && bytes[3] == 70;
+
+        if (!isPng && !isJpeg && !isGif && !isWebp) {
+          final headerString = String.fromCharCodes(bytes.take(20)).toLowerCase();
+          if (headerString.contains('<svg') || headerString.contains('<?xml') || headerString.contains('<!doctype')) {
+            print("[CandidateCubit] Decoded header contains XML/SVG tags, skipping.");
+            return false;
+          }
+        }
+      }
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  String? _normalizeBase64Image(String? base64Str) {
+    if (!_isValidRasterImage(base64Str)) return null;
+    var cleanStr = base64Str!.trim();
+    if (cleanStr.contains(',')) {
+      cleanStr = cleanStr.split(',').last;
+    }
+    return cleanStr.replaceAll(RegExp(r'\s+'), '');
+  }
+
   /// 🌐 FETCH CANDIDATES DYNAMICALLY FROM ODOO BACKEND
   Future<void> loadCandidates() async {
     print("[CandidateCubit] loadCandidates() started. Querying 'hr.applicant' from Odoo...");
@@ -54,26 +108,61 @@ class CandidateCubit extends Cubit<CandidateState> {
         );
         if (rawFields is Map) {
           fieldsInfo = Map<String, dynamic>.from(rawFields);
+          // Print all fields on the hr.candidate model to inspect them for skills relation field names
+          print("[DEBUG] hr.candidate available fields from Odoo fields_get: ${fieldsInfo.keys.toList()}");
+          try {
+            // Write to a local file to read the schema details directly
+            final file = File('fields_log.txt');
+            file.writeAsStringSync(fieldsInfo.keys.toList().toString());
+          } catch (_) {}
         }
       } catch (fe) {
         print("[CandidateCubit] fields_get failed, falling back to defaults. Error: $fe");
       }
 
+      // We ask for both 'candidate_skill_ids' and 'skill_ids' to support different Odoo model variations.
+      // The dynamically loaded fieldsInfo map will filter out whichever fields are not active on the server.
       final List<String> requestedFields = [
         'id',
         'name',
+        'partner_id',
         'partner_name',
         'email_from',
         'partner_phone',
         'type_id',
+        'degree_id',
         'user_id',
         'priority',
         'availability',
         'company_id',
         'stage_id',
+        'resume',
+        'candidate_skill_ids',
+        'skill_ids',
+        'categ_ids',
+        // Potential fields for LinkedIn profile
+        'linkedin_profile',
+        'linkedin',
+        'linkedin_url',
+        'x_linkedin',
+        'x_linkedin_profile',
+        'social_linkedin',
+        // Potential fields for Alternate Phone / Private Phone
+        'private_phone',
+        'alternate_phone',
+        'alternate_mobile',
+        'mobile',
+        'phone_alternate',
+        'phone_private',
+        'x_alternate_phone',
+        // Potential image fields from Odoo
+        'image_128',
+        'image_medium',
+        'image_1920',
+        'image',
       ];
 
-      // Only select fields that actually exist on the Odoo server
+      // Only select fields that actually exist on the Odoo server (dynamic fallback)
       final List<String> activeFields = fieldsInfo != null
           ? requestedFields.where((f) => fieldsInfo!.containsKey(f)).toList()
           : requestedFields;
@@ -92,12 +181,128 @@ class CandidateCubit extends Cubit<CandidateState> {
       print("[CandidateCubit] loadCandidates() Odoo raw response type: ${candidatesRes.runtimeType}");
       if (candidatesRes is List) {
         print("[CandidateCubit] loadCandidates() fetched ${candidatesRes.length} records successfully.");
+        
+        // -----------------------------------------------------------------
+        // BULK FETCH CANDIDATE SKILL DETAILS FROM 'hr.candidate.skill'
+        // -----------------------------------------------------------------
+        final List<int> allCandidateSkillIds = [];
+        final List<int> partnerIds = [];
+        for (var e in candidatesRes) {
+          // Identify if the field returned is candidate_skill_ids or skill_ids
+          final skillField = e['candidate_skill_ids'] ?? e['skill_ids'];
+          if (skillField is List) {
+            for (var id in skillField) {
+              if (id is int) {
+                allCandidateSkillIds.add(id);
+              }
+            }
+          }
+
+          // Identify linked res.partner IDs for fetching contact photos
+          final partnerVal = e['partner_id'];
+          if (partnerVal is List && partnerVal.isNotEmpty && partnerVal[0] is int) {
+            partnerIds.add(partnerVal[0] as int);
+          }
+        }
+
+        // Fetch Odoo candidate skills in bulk to minimize RPC requests
+        final Map<int, HrCandidateSkill> skillMap = {};
+        if (allCandidateSkillIds.isNotEmpty) {
+          try {
+            print("[CandidateCubit] Bulk fetching skill details for IDs: $allCandidateSkillIds");
+            final skillDetails = await _svc.executeModelMethod(
+              'hr.candidate.skill',
+              'search_read',
+              [[['id', 'in', allCandidateSkillIds]]],
+              kwargs: {
+                'fields': ['id', 'skill_type_id', 'skill_id', 'skill_level_id'],
+              },
+            );
+            if (skillDetails is List) {
+              for (var sd in skillDetails) {
+                final id = sd['id'] as int;
+                
+                // Parse Skill Type Many2one field
+                final typeVal = sd['skill_type_id'];
+                final typeName = typeVal is List && typeVal.length > 1 ? typeVal[1].toString() : '';
+                
+                // Parse Skill Many2one field
+                final skillVal = sd['skill_id'];
+                final skillName = skillVal is List && skillVal.length > 1 ? skillVal[1].toString() : '';
+                
+                // Parse Skill Level Many2one field
+                final levelVal = sd['skill_level_id'];
+                final levelName = levelVal is List && levelVal.length > 1 ? levelVal[1].toString() : 'Intermediate';
+
+                skillMap[id] = HrCandidateSkill(
+                  skillTypeId: typeName,
+                  skillId: skillName,
+                  skillLevel: levelName,
+                );
+              }
+              print("[CandidateCubit] Successfully mapped ${skillMap.length} skills in local dictionary.");
+            }
+          } catch (se) {
+            print("[CandidateCubit] Bulk fetch of hr.candidate.skill failed: $se");
+          }
+        }
+
+        // Fetch Odoo res.partner images in bulk
+        final Map<int, String> partnerImageMap = {};
+        if (partnerIds.isNotEmpty) {
+          try {
+            print("[CandidateCubit] Bulk fetching partner images for ResPartner IDs: $partnerIds");
+            final partnerDetails = await _svc.executeModelMethod(
+              'res.partner',
+              'search_read',
+              [[['id', 'in', partnerIds]]],
+              kwargs: {
+                'fields': ['id', 'image_128'],
+              },
+            );
+            if (partnerDetails is List) {
+              for (var pd in partnerDetails) {
+                final id = pd['id'] as int;
+                final img = pd['image_128'];
+                if (img is String && img.isNotEmpty) {
+                  partnerImageMap[id] = img;
+                }
+              }
+              print("[CandidateCubit] Successfully mapped ${partnerImageMap.length} partner images.");
+            }
+          } catch (pe) {
+            print("[CandidateCubit] Bulk fetch of partner images failed: $pe");
+          }
+        // Fetch Odoo candidate tags/categories in bulk
+        final Map<int, String> tagMap = {};
+        try {
+          print("[CandidateCubit] Fetching tag categories from 'hr.applicant.category'...");
+          final tagsRes = await _svc.executeModelMethod(
+            'hr.applicant.category',
+            'search_read',
+            [[]],
+            kwargs: {
+              'fields': ['id', 'name'],
+            },
+          );
+          if (tagsRes is List) {
+            for (var t in tagsRes) {
+              final id = t['id'] as int;
+              final name = t['name']?.toString() ?? '';
+              tagMap[id] = name;
+            }
+            print("[CandidateCubit] Successfully mapped ${tagMap.length} tag categories.");
+          }
+        } catch (te) {
+          print("[CandidateCubit] Fetch of hr.applicant.category failed: $te");
+        }
+
         final parsed = candidatesRes.map((e) {
           final nameParts = (e['partner_name']?.toString() ?? e['name']?.toString() ?? 'Unknown').split(' ');
           final fName = nameParts.first;
           final lName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : 'Record';
 
-          final degreeVal = e['type_id'];
+           final degreeVal = e['degree_id'] ?? e['type_id'];
           final degreeName = degreeVal is List && degreeVal.length > 1 ? degreeVal[1].toString() : '';
 
           final userVal = e['user_id'];
@@ -116,7 +321,49 @@ class CandidateCubit extends Cubit<CandidateState> {
             } catch (_) {}
           }
 
-          print("[CandidateCubit]   -> Loaded Candidate: $fName $lName, Email: ${e['email_from']}, Stage: $stageName");
+          // Parse skills for this candidate from either maps or bulk-fetched ID dictionary
+          List<HrCandidateSkill> parsedSkills = [];
+          final skillField = e['candidate_skill_ids'] ?? e['skill_ids'];
+          if (skillField is List && skillField.isNotEmpty) {
+            if (skillField.first is Map) {
+              // If Odoo returns list of maps directly
+              parsedSkills = skillField.map((s) => HrCandidateSkill.fromJson(Map<String, dynamic>.from(s))).toList();
+            } else {
+              // If Odoo returns list of IDs, resolve them using our bulk-fetched dictionary
+              for (var id in skillField) {
+                if (id is int && skillMap.containsKey(id)) {
+                  parsedSkills.add(skillMap[id]!);
+                }
+              }
+            }
+          }
+
+          // Detect which field was populated for linkedin profile
+          final linkedinValue = e['linkedin_profile'] ?? e['linkedin'] ?? e['linkedin_url'] ?? e['x_linkedin'] ?? e['x_linkedin_profile'] ?? e['social_linkedin'];
+          final parsedLinkedin = (linkedinValue is String && linkedinValue.isNotEmpty) ? linkedinValue : null;
+
+          // Detect which field was populated for alternate phone
+          final altPhoneValue = e['private_phone'] ?? e['alternate_phone'] ?? e['alternate_mobile'] ?? e['mobile'] ?? e['phone_alternate'] ?? e['phone_private'] ?? e['x_alternate_phone'];
+          final parsedAltPhone = (altPhoneValue is String && altPhoneValue.isNotEmpty) 
+              ? altPhoneValue 
+              : (altPhoneValue is int) 
+                  ? altPhoneValue.toString() 
+                  : (altPhoneValue == false) ? null : altPhoneValue?.toString();
+
+          // Detect which field was populated for profile image (base64)
+          // Fall back to partner image_128 if direct candidate photo doesn't exist
+          dynamic rawImage = e['image_128'] ?? e['image_medium'] ?? e['image_1920'] ?? e['image'];
+          if (rawImage == null || rawImage == false || rawImage.toString().isEmpty) {
+            final partnerVal = e['partner_id'];
+            if (partnerVal is List && partnerVal.isNotEmpty && partnerVal[0] is int) {
+              final partnerId = partnerVal[0] as int;
+              rawImage = partnerImageMap[partnerId];
+            }
+          }
+          final parsedImage = _normalizeBase64Image(rawImage?.toString());
+
+
+          print("[CandidateCubit]   -> Loaded Candidate: $fName $lName, Email: ${e['email_from']}, Stage: $stageName, Skills: ${parsedSkills.length}, AltPhone: $parsedAltPhone, Linkedin: $parsedLinkedin, HasImage: ${parsedImage != null}");
 
           // Fix email parsing - handle boolean false values from Odoo
           final emailValue = e['email_from'];
@@ -126,26 +373,43 @@ class CandidateCubit extends Cubit<CandidateState> {
                   ? 'no-email@odoo.com'
                   : emailValue?.toString() ?? 'no-email@odoo.com';
 
-          return HrCandidate(
-            odooId: e['id'] is int ? e['id'] as int : int.tryParse(e['id']?.toString() ?? ''),
-            firstName: fName,
-            lastName: lName,
-            partnerId: e['partner_name']?.toString() ?? e['name']?.toString() ?? 'Contact',
-            emailFrom: emailFromValue,
-            partnerPhone: e['partner_phone']?.toString() ?? 'Not provided',
-            typeId: degreeName,
-            userId: userName,
-            priority: e['priority']?.toString() ?? '0',
-            availability: avail,
-            categIds: const [],
+            // Parse tags/categ_ids
+            List<String> parsedTags = [];
+            final categField = e['categ_ids'];
+            if (categField is List) {
+              for (var id in categField) {
+                if (id is int && tagMap.containsKey(id)) {
+                  parsedTags.add(tagMap[id]!);
+                } else if (id is Map && id.containsKey('name')) {
+                  parsedTags.add(id['name'].toString());
+                }
+              }
+            }
+
+            return HrCandidate(
+              odooId: e['id'] is int ? e['id'] as int : int.tryParse(e['id']?.toString() ?? ''),
+              firstName: fName,
+              lastName: lName,
+              partnerId: e['partner_name']?.toString() ?? e['name']?.toString() ?? 'Contact',
+              emailFrom: emailFromValue,
+              partnerPhone: e['partner_phone']?.toString() ?? 'Not provided',
+              alternatePhone: parsedAltPhone,
+              linkedinProfile: parsedLinkedin,
+              typeId: degreeName,
+              userId: userName,
+              priority: e['priority']?.toString() ?? '0',
+              availability: avail,
+              categIds: parsedTags,
+            resume: e['resume']?.toString(),
             companyId: compName,
-            skills: const [],
+            skills: parsedSkills,
+            image: parsedImage,
             stage: stageName.contains('Screening') ? 'Screening' : (stageName.contains('HR') ? 'HR Round' : (stageName.contains('Tech') ? 'Technical Round' : 'Applied')),
           ).computeSkillIds().computeMatchingSkillIds(state.activeRequiredSkills);
         }).toList();
 
         emit(state.copyWith(candidates: parsed, isLoading: false));
-      } else {
+      } }else {
         print("[CandidateCubit] loadCandidates() Odoo returned non-list value: $candidatesRes");
         emit(state.copyWith(isLoading: false));
       }

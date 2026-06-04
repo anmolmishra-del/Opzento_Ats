@@ -1,12 +1,26 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opsento_ats/features/jobs/model/model_class.dart';
 import 'package:opsento_ats/features/jobs/repository/create_job_servic.dart';
+import 'package:opsento_ats/features/jobs/repository/hr_job_service file.dart';
 
 import '../state/job_state.dart';
 
 class JobCubit extends Cubit<JobState> {
+  final HrJobService _service;
 
-  JobCubit() : super(JobState.initial());
+  JobCubit({HrJobService? service})
+      : _service = service ?? HrJobService(),
+        super(JobState.initial());
+
+  Future<void> fetchJobs() async {
+    emit(state.copyWith(isLoading: true, error: null));
+    try {
+      final jobs = await _service.fetchJobs();
+      emit(state.copyWith(jobs: jobs, isLoading: false, error: null));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, error: e.toString()));
+    }
+  }
 
   void changeTab(String tab) {
     emit(state.copyWith(selectedTab: tab));

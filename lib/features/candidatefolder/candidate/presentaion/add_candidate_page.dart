@@ -103,6 +103,7 @@ class _AddCandidatePageState extends State<AddCandidatePage> {
                         ],
                       ),
                       const SizedBox(height: 16),
+                      
                       TextFormField(
                         initialValue: lastName,
                         decoration: const InputDecoration(

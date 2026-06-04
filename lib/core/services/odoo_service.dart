@@ -15,6 +15,8 @@ class OdooService {
     _client = OdooClient(baseUrl, sessionId: session);
   }
 
+  OdooSession? get sessionId => _client.sessionId;
+
   void close() {
     _client.close();
   }
