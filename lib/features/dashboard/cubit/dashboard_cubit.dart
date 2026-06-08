@@ -61,6 +61,7 @@ class DashboardCubit extends Cubit<DashboardState> {
         print("[DashboardCubit] fields_get failed for hr.candidate: $fe");
       }
 
+
       final List<String> activeCandFields = ['id'];
       if (candidateFieldsInfo != null && candidateFieldsInfo.containsKey('stage_id')) {
         activeCandFields.add('stage_id');
@@ -157,6 +158,8 @@ class DashboardCubit extends Cubit<DashboardState> {
           name: name,
           counts: counts,
           chartValues: chartValues,
+          recentApplications: [],
+          recentCandidates: [],
           error: null,
         ),
       );
@@ -166,6 +169,8 @@ class DashboardCubit extends Cubit<DashboardState> {
       emit(
         state.copyWith(
           isLoading: false,
+          recentApplications: [],
+          recentCandidates: [],
           error: e.toString(),
         ),
       );

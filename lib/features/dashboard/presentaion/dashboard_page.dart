@@ -223,11 +223,6 @@ class DashboardPage extends StatelessWidget {
                         ),
 
                       const SizedBox(height: 20),
-
-                      // ElevatedButton(
-                      //   onPressed: cubit.refreshDashboard,
-                      //   child: const Text("Refresh"),
-                      // ),
                     ],
                   ),
                 );

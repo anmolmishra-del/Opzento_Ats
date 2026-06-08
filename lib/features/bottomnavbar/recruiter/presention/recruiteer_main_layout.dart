@@ -6,6 +6,7 @@ import 'package:opsento_ats/features/dashboard/presentaion/dashboard_page.dart';
 import 'package:opsento_ats/features/interview_feedback/presentaion/interview_feedback_page.dart';
 import 'package:opsento_ats/features/jobs/presentaion/job_page.dart';
 import 'package:opsento_ats/features/offer_approv/presetion/offere_screen.dart';
+import 'package:opsento_ats/features/applications/presentation/applications_list_page.dart';
 
 class RecruiterMainLayout extends StatefulWidget {
   const RecruiterMainLayout({super.key});
@@ -27,8 +28,9 @@ class _RecruiterMainLayoutState extends State<RecruiterMainLayout> {
     pages = [
       DashboardPage(),
       JobPage(isRecruiter: true),
+      const ApplicationsListPage(),
       CandidatePage(),
-      OfferApprovalPage(),
+      // OfferApprovalPage(),
       InterviewFeedbackPage(),
     ];
   }
@@ -52,8 +54,8 @@ class _RecruiterMainLayoutState extends State<RecruiterMainLayout> {
   final List<_NavItem> navItems = const [
     _NavItem(icon: Icons.home_rounded, activeIcon: Icons.home_rounded, label: "Home"),
     _NavItem(icon: Icons.work_outline_rounded, activeIcon: Icons.work_rounded, label: "Jobs"),
+    _NavItem(icon: Icons.description_outlined, activeIcon: Icons.description, label: "Applications"),
     _NavItem(icon: Icons.people_outline_rounded, activeIcon: Icons.people_rounded, label: "Candidates"),
-    _NavItem(icon: Icons.verified_outlined, activeIcon: Icons.verified_rounded, label: "Approval"),
     _NavItem(icon: Icons.rate_review_outlined, activeIcon: Icons.rate_review_rounded, label: "Feedback"),
   ];
 
