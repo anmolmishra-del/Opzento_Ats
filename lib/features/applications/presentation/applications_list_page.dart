@@ -8,7 +8,8 @@ import '../state/hr_applicant_model.dart';
 import 'application_detail_page.dart';
 
 class ApplicationsListPage extends StatelessWidget {
-  const ApplicationsListPage({super.key});
+  final int? filterJobId;
+  const ApplicationsListPage({super.key, this.filterJobId});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +23,11 @@ class ApplicationsListPage extends StatelessWidget {
             final searchLower = state.searchQuery.toLowerCase();
 
             final filtered = state.applications.where((app) {
+              // 0. Job ID Filter
+              if (filterJobId != null && app.jobId != filterJobId && app.hrJobRecruitmentId != filterJobId) {
+                return false;
+              }
+
               // 1. Stage/Status Filter
               bool matchesTab = true;
               if (state.selectedTab != 'All') {

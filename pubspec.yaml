@@ -53,6 +53,7 @@ dependencies:
   odoo_rpc: ^0.7.1
   shared_preferences: ^2.5.5
   flutter_secure_storage: ^10.2.0
+  share_plus: ^12.0.2
 
 dev_dependencies:
   flutter_test:

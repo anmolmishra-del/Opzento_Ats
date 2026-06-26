@@ -2,6 +2,8 @@ class JobData {
 
   final int? id;
 
+  final int? jobId;
+
   final String title;
 
   final String department;
@@ -42,6 +44,7 @@ class JobData {
 
   JobData({
     this.id,
+    this.jobId,
     required this.title,
     required this.department,
     this.experience = '',
@@ -70,6 +73,14 @@ class JobData {
     return JobData(
 
       id: json['id'] as int?,
+
+      jobId: json['jobId'] != null 
+          ? json['jobId'] as int? 
+          : (json['job_id'] is int 
+              ? json['job_id'] as int 
+              : (json['job_id'] is List && (json['job_id'] as List).isNotEmpty 
+                  ? json['job_id'][0] as int? 
+                  : null)),
 
       title:
           json['title'] ??
@@ -166,6 +177,8 @@ class JobData {
     return {
 
       'id': id,
+
+      'jobId': jobId,
 
       'title': title,
 

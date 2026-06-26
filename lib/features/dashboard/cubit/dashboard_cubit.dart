@@ -235,37 +235,82 @@ class DashboardCubit extends Cubit<DashboardState> {
       await service.ensureSession();
 
       /// OPEN POSITIONS
-      final jobsRes =
-          await service.executeModelMethod(
-        'hr.job',
-        'search_read',
-        [[]],
-        kwargs: {
-          'fields': ['id'],
-        },
-      );
+      dynamic jobsRes;
+      try {
+        jobsRes = await service.executeModelMethod(
+          'hr.job',
+          'search_read',
+          [[]],
+          kwargs: {
+            'fields': ['id'],
+          },
+        );
+      } catch (e) {
+        print("[DashboardCubit] hr.job fetch failed: $e");
+      }
 
       /// APPLICATIONS
-      final applicationsRes =
-          await service.executeModelMethod(
-        'hr.applicant',
-        'search_read',
-        [[]],
-        kwargs: {
-          'fields': ['id'],
-        },
-      );
+      dynamic applicationsRes;
+      try {
+        Map<String, dynamic>? fieldsInfo;
+        try {
+          final rawFields = await service.executeModelMethod(
+            'hr.applicant',
+            'fields_get',
+            [],
+            kwargs: {'attributes': ['type']},
+          );
+          if (rawFields is Map) {
+            fieldsInfo = Map<String, dynamic>.from(rawFields);
+          }
+        } catch (fe) {
+          print("[DashboardCubit] fields_get for hr.applicant failed: $fe");
+        }
+
+        final List<String> requestedAppFields = ['id', 'name', 'partner_name', 'job_id', 'stage_id', 'create_date'];
+        final List<String> activeAppFields = fieldsInfo != null
+            ? requestedAppFields.where((f) => fieldsInfo!.containsKey(f) == true).toList()
+            : ['id', 'name'];
+
+        applicationsRes = await service.executeModelMethod(
+          'hr.applicant',
+          'search_read',
+          [[]],
+          kwargs: {
+            'fields': activeAppFields,
+          },
+        );
+      } catch (e) {
+        print("[DashboardCubit] hr.applicant fetch failed: $e");
+      }
+
+      // Extract raw applications and sort/slice for recent
+      List<Map<String, dynamic>> recentAppsList = [];
+      if (applicationsRes is List) {
+        final rawList = List<Map<String, dynamic>>.from(applicationsRes);
+        // Sort by create_date or id descending to show newest
+        rawList.sort((a, b) {
+          final idA = a['id'] as int? ?? 0;
+          final idB = b['id'] as int? ?? 0;
+          return idB.compareTo(idA);
+        });
+        recentAppsList = rawList.take(5).toList();
+      }
 
       /// CANDIDATES
-      final candidatesRes =
-          await service.executeModelMethod(
-        'hr.candidate',
-        'search_read',
-        [[]],
-        kwargs: {
-          'fields': ['id'],
-        },
-      );
+      dynamic candidatesRes;
+      try {
+        candidatesRes = await service.executeModelMethod(
+          'hr.candidate',
+          'search_read',
+          [[]],
+          kwargs: {
+            'fields': ['id'],
+          },
+        );
+      } catch (e) {
+        print("[DashboardCubit] hr.candidate fetch failed: $e");
+      }
 
       int openPositions = 0;
       int totalApplications = 0;
@@ -299,7 +344,7 @@ class DashboardCubit extends Cubit<DashboardState> {
             totalApplications.toDouble(),
             totalCandidates.toDouble(),
           ],
-          recentApplications: [],
+          recentApplications: recentAppsList,
           recentCandidates: [],
           error: null,
         ),
