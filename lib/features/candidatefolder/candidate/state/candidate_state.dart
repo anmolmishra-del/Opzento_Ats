@@ -15,6 +15,9 @@ class CandidateState {
   final List<Map<String, dynamic>> skillTypes;
   final List<Map<String, dynamic>> skillLevels;
   final List<Map<String, dynamic>> skills;
+  //
+  // final List<Map<String, dynamic>> jobPositions;
+  // final List<Map<String, dynamic>> applicationStatuses;
 
   const CandidateState({
     required this.selectedTab,
@@ -29,6 +32,8 @@ class CandidateState {
     this.skillTypes = const [],
     this.skillLevels = const [],
     this.skills = const [],
+    // this.jobPositions = const [],
+    // this.applicationStatuses = const [],  
   });
 
   // Dynamically compute counts based on the current candidate lists
@@ -62,6 +67,8 @@ class CandidateState {
       skillTypes: const [],
       skillLevels: const [],
       skills: const [],
+      // jobPositions: const [],
+      // applicationStatuses: const [],  
     );
   }
 

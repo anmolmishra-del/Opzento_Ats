@@ -23,26 +23,25 @@ class DashboardState {
     required this.recentCandidates,
   });
 
-  factory DashboardState.initial() {
-    return const DashboardState(
-      name: "",
-      isLoading: false,
-      error: null,
-      selectedFilter: "This Month",
-      titles: [
-        "Open Positions",
-        "New Applications",
-        "Interviews Today",
-        "Offers Pending",
-        "Hired This Month",
-        "Rejected",
-      ],
-      counts: [],
-      chartValues: [],
-      recentApplications: [],
-      recentCandidates: [],
-    ); 
-  }
+factory DashboardState.initial() {
+  return const DashboardState(
+    name: "",
+    isLoading: false,
+    error: null,
+    selectedFilter: "This Month",
+
+    titles: [
+      "Open Positions",
+      "Applications",
+      "Candidates",
+    ],
+
+    counts: [],
+    chartValues: [],
+    recentApplications: [],
+    recentCandidates: [],
+  );
+}
 
   DashboardState copyWith({
     bool? isLoading,

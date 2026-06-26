@@ -215,7 +215,7 @@ class _JobPageState extends State<JobPage> {
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       color: const Color(0xFFE2E8F0),
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(14),border: Border.all(color: const Color(0xFFE2E8F0), width: 1),
                     ),
                     child: Row(
                       children: [

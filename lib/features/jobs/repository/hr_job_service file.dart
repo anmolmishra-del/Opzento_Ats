@@ -17,6 +17,7 @@ class HrJobRecruitmentService {
         'fields': fields ?? ['id', 'name'],
         'limit': limit,
       },
+    
     );
 
     if (res is List && res.isNotEmpty) {

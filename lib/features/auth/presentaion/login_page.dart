@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:odoo_rpc/odoo_rpc.dart';
-import 'package:opsento_ats/core/constants/app_image.dart';
 import 'package:opsento_ats/features/forget_password/presention/forget_password_page.dart';
 import 'package:opsento_ats/routes/app_routes.dart';
 import 'package:opsento_ats/features/auth/state/login_state.dart';

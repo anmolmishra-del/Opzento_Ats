@@ -8,7 +8,6 @@ import 'package:opsento_ats/features/candidatefolder/candidate_screen/presentaio
 import '../cubit/candidate_cubit.dart';
 import '../state/candidate_state.dart';
 import '../state/hr_candidate_model.dart';
-import 'add_candidate_page.dart';
 
 class CandidatePage extends StatelessWidget {
   const CandidatePage({super.key});

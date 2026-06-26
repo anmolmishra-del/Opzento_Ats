@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:opsento_ats/features/dashboard/presentaion/dashboard_page.dart';
 import 'package:opsento_ats/utils/shared_ref.dart';
 import 'package:opsento_ats/routes/app_routes.dart';
 import 'package:opsento_ats/features/candidatefolder/candidate/presentaion/candidate_page.dart';
-import 'package:opsento_ats/features/dashboard/presentaion/dashboard_page.dart';
-import 'package:opsento_ats/features/interview_feedback/presentaion/interview_feedback_page.dart';
 import 'package:opsento_ats/features/jobs/presentaion/job_page.dart';
-import 'package:opsento_ats/features/offer_approv/presetion/offere_screen.dart';
 import 'package:opsento_ats/features/applications/presentation/applications_list_page.dart';
 
 class RecruiterMainLayout extends StatefulWidget {
@@ -28,10 +26,10 @@ class _RecruiterMainLayoutState extends State<RecruiterMainLayout> {
     pages = [
       DashboardPage(),
       JobPage(isRecruiter: true),
-      const ApplicationsListPage(),
+      ApplicationsListPage(),
       CandidatePage(),
       // OfferApprovalPage(),
-      InterviewFeedbackPage(),
+      // InterviewFeedbackPage(),
     ];
   }
 
@@ -56,7 +54,7 @@ class _RecruiterMainLayoutState extends State<RecruiterMainLayout> {
     _NavItem(icon: Icons.work_outline_rounded, activeIcon: Icons.work_rounded, label: "Jobs"),
     _NavItem(icon: Icons.description_outlined, activeIcon: Icons.description, label: "Applications"),
     _NavItem(icon: Icons.people_outline_rounded, activeIcon: Icons.people_rounded, label: "Candidates"),
-    _NavItem(icon: Icons.rate_review_outlined, activeIcon: Icons.rate_review_rounded, label: "Feedback"),
+    // _NavItem(icon: Icons.rate_review_outlined, activeIcon: Icons.rate_review_rounded, label: "Feedback"),
   ];
 
   void onTabChanged(int index) {
@@ -78,11 +76,11 @@ class _RecruiterMainLayoutState extends State<RecruiterMainLayout> {
 
   Widget _buildBottomNav() {
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, 20),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+      margin: const EdgeInsets.fromLTRB(0, 0, 0, 25),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(28),
+        // borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
             color: Colors.indigo.withValues(alpha: 0.12),
@@ -95,6 +93,7 @@ class _RecruiterMainLayoutState extends State<RecruiterMainLayout> {
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
+          
         ],
       ),
       child: Row(

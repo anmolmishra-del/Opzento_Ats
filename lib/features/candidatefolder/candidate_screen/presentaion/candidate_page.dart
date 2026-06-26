@@ -393,7 +393,16 @@ class _CandidateProfilePageState extends State<CandidateProfilePage> with Single
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: const Color(0xFFE2E8F0)),
                 ),
-                child: const Icon(Icons.article_outlined, color: Color(0xFF0F172A), size: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Download Resume', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.blue)),
+                    // const Spacer(),
+                    SizedBox(width: 8),
+                    const Icon(Icons.article_outlined, color: Color(0xFF0F172A), size: 20),
+                    
+                  ],
+                ),
               ),
             );
           }
