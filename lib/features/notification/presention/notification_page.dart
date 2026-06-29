@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opsento_ats/features/notification/cubit/motification_cubit.dart';
+import 'package:opsento_ats/features/notification/cubit/notification_cubit.dart';
 import 'package:opsento_ats/features/notification/model/model_class.dart';
 import 'package:opsento_ats/features/notification/state/notification_state.dart';
 

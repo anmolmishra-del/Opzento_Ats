@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opsento_ats/features/candidatefolder/candidate_home/cubit/home_cubit.dart';
 import 'package:opsento_ats/features/candidatefolder/candidate_home/state/home_state.dart';
 import 'package:opsento_ats/features/my_applications/cubit/my_application_cubit.dart';
-import 'package:opsento_ats/features/my_applications/state/my_appication_state.dart';
+import 'package:opsento_ats/features/my_applications/state/my_application_state.dart';
 
 class CandidateHomePage extends StatelessWidget {
 

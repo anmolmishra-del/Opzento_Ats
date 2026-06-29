@@ -1,160 +1,104 @@
+import 'hr_candidate_model.dart';
+
 class CandidateState {
   final String selectedTab;
   final String searchQuery;
+  final List<HrCandidate> candidates;
+  final bool isLoading;
+  final HrCandidate? selectedCandidate;
+  final List<String> activeRequiredSkills;
 
-  final Map<String, int> tabCounts;
-
-  final List<Candidate> candidates;
+  // Dynamic dropdown lists fetched from Odoo backend
+  final List<Map<String, dynamic>> degrees;
+  final List<Map<String, dynamic>> managers;
+  final List<Map<String, dynamic>> companies;
+  final List<Map<String, dynamic>> skillTypes;
+  final List<Map<String, dynamic>> skillLevels;
+  final List<Map<String, dynamic>> skills;
+  //
+  // final List<Map<String, dynamic>> jobPositions;
+  // final List<Map<String, dynamic>> applicationStatuses;
 
   const CandidateState({
     required this.selectedTab,
     required this.searchQuery,
-    required this.tabCounts,
     required this.candidates,
+    this.isLoading = false,
+    this.selectedCandidate,
+    this.activeRequiredSkills = const ['Flutter', 'Dart', 'Firebase', 'REST API', 'Git', 'Bloc'],
+    this.degrees = const [],
+    this.managers = const [],
+    this.companies = const [],
+    this.skillTypes = const [],
+    this.skillLevels = const [],
+    this.skills = const [],
+    // this.jobPositions = const [],
+    // this.applicationStatuses = const [],  
   });
 
+  // Dynamically compute counts based on the current candidate lists
+  Map<String, int> get tabCounts {
+    final counts = {
+      "Applied": 0,
+      "Screening": 0,
+      "HR Round": 0,
+      "Technical Round": 0,
+      "Presentation": 0,
+    };
+    for (var c in candidates) {
+      if (counts.containsKey(c.stage)) {
+        counts[c.stage] = counts[c.stage]! + 1;
+      }
+    }
+    return counts;
+  }
+
   factory CandidateState.initial() {
-    return const CandidateState(
+    final initialCandidates = const <HrCandidate>[];
+
+    return CandidateState(
       selectedTab: "Applied",
       searchQuery: "",
-      tabCounts: {
-        "Applied": 23,
-        "Screening": 10,
-        "HR Round": 6,
-        "Technical Round": 4,
-        "Presentation": 2,
-      },
-      candidates: [
-        Candidate(
-          name: "Rahul Sharma",
-          role: "Flutter Developer",
-          stage: "Applied",
-        ),
-        Candidate(
-          name: "Anjali Verma",
-          role: "Backend Developer",
-          stage: "Screening",
-        ),
-        Candidate(
-          name: "John Doe",
-          role: "UI/UX Designer",
-          stage: "HR Round",
-        ),
-      ],
+      candidates: initialCandidates,
+      isLoading: false,
+      degrees: const [],
+      managers: const [],
+      companies: const [],
+      skillTypes: const [],
+      skillLevels: const [],
+      skills: const [],
+      // jobPositions: const [],
+      // applicationStatuses: const [],  
     );
   }
 
   CandidateState copyWith({
     String? selectedTab,
     String? searchQuery,
-    Map<String, int>? tabCounts,
-    List<Candidate>? candidates,
+    List<HrCandidate>? candidates,
+    bool? isLoading,
+    HrCandidate? selectedCandidate,
+    List<String>? activeRequiredSkills,
+    List<Map<String, dynamic>>? degrees,
+    List<Map<String, dynamic>>? managers,
+    List<Map<String, dynamic>>? companies,
+    List<Map<String, dynamic>>? skillTypes,
+    List<Map<String, dynamic>>? skillLevels,
+    List<Map<String, dynamic>>? skills,
   }) {
     return CandidateState(
       selectedTab: selectedTab ?? this.selectedTab,
       searchQuery: searchQuery ?? this.searchQuery,
-      tabCounts: tabCounts ?? this.tabCounts,
       candidates: candidates ?? this.candidates,
+      isLoading: isLoading ?? this.isLoading,
+      selectedCandidate: selectedCandidate ?? this.selectedCandidate,
+      activeRequiredSkills: activeRequiredSkills ?? this.activeRequiredSkills,
+      degrees: degrees ?? this.degrees,
+      managers: managers ?? this.managers,
+      companies: companies ?? this.companies,
+      skillTypes: skillTypes ?? this.skillTypes,
+      skillLevels: skillLevels ?? this.skillLevels,
+      skills: skills ?? this.skills,
     );
   }
 }
-
-class Candidate {
-  final String name;
-  final String role;
-  final String stage;
-
-  const Candidate({
-    required this.name,
-    required this.role,
-    required this.stage,
-  });
-}
-
-
-
-
-
-// class CandidateState {
-
-//   final String selectedTab;
-
-//   final String searchQuery;
-
-//   final Map<String, int> tabCounts;
-
-//   final List<Candidate> candidates;
-
-//   const CandidateState({
-//     required this.selectedTab,
-//     required this.searchQuery,
-//     required this.tabCounts,
-//     required this.candidates,
-//   });
-
-//   factory CandidateState.initial() {
-
-//     return const CandidateState(
-
-//       selectedTab: "Applied",
-
-//       searchQuery: "",
-
-//       // dynamic counts
-//       tabCounts: {},
-
-//       // dynamic candidate list
-//       candidates: [],
-//     );
-//   }
-
-//   CandidateState copyWith({
-
-//     String? selectedTab,
-
-//     String? searchQuery,
-
-//     Map<String, int>? tabCounts,
-
-//     List<Candidate>? candidates,
-
-//   }) {
-
-//     return CandidateState(
-
-//       selectedTab:
-//           selectedTab ??
-//               this.selectedTab,
-
-//       searchQuery:
-//           searchQuery ??
-//               this.searchQuery,
-
-//       tabCounts:
-//           tabCounts ??
-//               this.tabCounts,
-
-//       candidates:
-//           candidates ??
-//               this.candidates,
-//     );
-//   }
-// }
-
-// class Candidate {
-
-//   final String name;
-
-//   final String role;
-
-//   final String stage;
-
-//   const Candidate({
-
-//     required this.name,
-
-//     required this.role,
-
-//     required this.stage,
-//   });
-// }

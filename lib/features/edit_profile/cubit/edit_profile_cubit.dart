@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opsento_ats/core/services/api_service.dart';
+import 'package:opsento_ats/core/services/odoo_service.dart';
+import 'package:opsento_ats/core/constants/api_config.dart';
 import '../state/edit_profile_state.dart';
 
 class EditProfileCubit
@@ -8,7 +9,7 @@ class EditProfileCubit
   EditProfileCubit()
       : super(const EditProfileState());
 
-  final service = OdooService();
+  final service = OdooService(ApiConfig.baseUrl);
 
   void setInitialData({
 
@@ -79,7 +80,7 @@ class EditProfileCubit
     try {
 
       /// UPDATE API
-      await service.client.callKw({
+      await service.callKw({
 
         'model': 'res.users',
 

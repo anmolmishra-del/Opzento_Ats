@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opsento_ats/features/recruiter/state/recruter_profile_state.dart';
+import 'package:opsento_ats/features/recruiter/state/recruiter_profile_state.dart';
 
 
 class RecruiterProfileCubit

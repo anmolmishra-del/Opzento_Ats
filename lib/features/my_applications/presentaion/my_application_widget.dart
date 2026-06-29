@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:opsento_ats/features/my_applications/state/my_appication_state.dart';
+import 'package:opsento_ats/features/my_applications/state/my_application_state.dart';
 
 class ApplicationCard
     extends StatelessWidget {

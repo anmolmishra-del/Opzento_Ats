@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opsento_ats/features/my_appliation_detail.dart/cubit/my_application_detail_cubit.dart';
-import 'package:opsento_ats/features/my_appliation_detail.dart/state/detail_state.dart';
+import 'package:opsento_ats/features/my_application_detail/cubit/my_application_detail_cubit.dart';
+import 'package:opsento_ats/features/my_application_detail/state/detail_state.dart';
 
-import '../../my_applications/state/my_appication_state.dart';
+import '../../my_applications/state/my_application_state.dart';
 
 
 class ApplicationDetailsPage

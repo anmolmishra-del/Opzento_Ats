@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:opsento_ats/core/services/api_service.dart';
+import 'package:opsento_ats/core/services/odoo_service.dart';
+import 'package:opsento_ats/core/constants/api_config.dart';
 import 'package:opsento_ats/features/profile/state/profile_state.dart';
 
 class RecruiterProfileCubit
@@ -13,7 +14,7 @@ class RecruiterProfileCubit
     getProfile();
   }
 
-  final service = OdooService();
+  final service = OdooService(ApiConfig.baseUrl);
 Future<void> getProfile() async {
 
   try {
@@ -122,13 +123,7 @@ Future<void> getProfile() async {
     );
 
       // ODOO UPDATE
-      await service.updateProfile(
-
-        name: name,
-        email: email,
-        phone: phone,
-      );
-
+    
       // LOCAL STATE UPDATE
       emit(
         state.copyWith(

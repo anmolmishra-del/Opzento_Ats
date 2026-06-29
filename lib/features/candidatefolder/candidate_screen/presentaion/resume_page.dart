@@ -5,7 +5,9 @@ import 'package:opsento_ats/features/candidatefolder/candidate_screen/state/cand
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class ResumePage extends StatefulWidget {
-  const ResumePage({super.key});
+  final int? candidateId;
+  final String? email;
+  const ResumePage({super.key, this.candidateId, this.email});
 
   @override
   State<ResumePage> createState() => _ResumePageState();
@@ -17,7 +19,7 @@ class _ResumePageState extends State<ResumePage> {
     super.initState();
 
     /// 🔥 PAGE OPEN FLOW
-    context.read<ProfileCubit>().loadResume();
+    context.read<ProfileCubit>().loadResume(widget.candidateId, widget.email);
   }
 
   @override
@@ -72,6 +74,9 @@ class _ResumePageState extends State<ResumePage> {
                             // borderRadius: BorderRadius.circular(20),
                             child: SfPdfViewer.network(
                               state.pdfUrl!,
+                              headers: state.sessionToken != null && state.sessionToken!.isNotEmpty
+                                  ? {'Cookie': 'session_id=${state.sessionToken}'}
+                                  : null,
                             ),
                           ),
                   ),

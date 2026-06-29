@@ -1,84 +1,120 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opsento_ats/core/constants/app_colors.dart';
-import 'package:opsento_ats/features/notification/presention/notification_page.dart';
 import 'package:opsento_ats/features/profile/presentation/profile_page.dart';
-
 import '../cubit/dashboard_cubit.dart';
 import '../state/dashboard_state.dart';
 
 class DashboardPage extends StatelessWidget {
-  const DashboardPage({super.key});
-
+  final ValueChanged<int>? onTabChanged;
+  const DashboardPage({super.key, this.onTabChanged});
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => DashboardCubit(),
       child: Scaffold(
-        backgroundColor: Colors.white,
+// backgroundColor: const Color(0xFFF8FAFC),
+     backgroundColor:  Colors.white,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(18),
             child: BlocBuilder<DashboardCubit, DashboardState>(
               builder: (context, state) {
                 final cubit = context.read<DashboardCubit>();
-
                 return SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // TOP BAR
-                      Row(
-                        children: [
-                          const CircleAvatar(radius: 24),
-                          const SizedBox(width: 12),
-                          Column(
-  crossAxisAlignment:
-      CrossAxisAlignment.start,
-  children: [
-
-    Text(
-      "Hello",
-      style: TextStyle(
-        color: Colors.grey,
-      ),
-    ),
-
-    Text(
-                            state.name,
-
-                            style:
-                                const TextStyle(
-                              fontSize: 16,
-
-                              fontWeight:
-                                  FontWeight.w500,
+                       // TOP BAR
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF4F46E5), Color(0xFF6366F1)], // Premium Indigo to Violet gradient
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF4F46E5).withOpacity(0.25),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
                             ),
-                          ),
-  ],
-),
-                          const Spacer(),
-                          IconButton(
-                            icon: const Icon(Icons.notifications_none, size: 28),
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => const NotificationsPage(),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+                              ),
+                              child: CircleAvatar(
+                                radius: 20,
+                                backgroundColor: Colors.white.withOpacity(0.2),
+                                child: Text(
+                                  state.name.isNotEmpty ? state.name[0].toUpperCase() : 'S',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
                                 ),
-                              );
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.person_outline, size: 28),
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => const RecruiterProfilePage(),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
+                              ),
+                            ),
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Hello",
+                                        style: TextStyle(
+                                          color: Colors.white.withOpacity(0.8),
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      const Icon(
+                                        Icons.waving_hand_rounded,
+                                        color: Color(0xFFFFB020),
+                                        size: 16,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 2),
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      state.name,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.white,
+                                        letterSpacing: -0.2,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.person_outline_rounded, size: 26, color: Colors.white),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const RecruiterProfilePage(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
 
                       const SizedBox(height: 20),
@@ -142,7 +178,6 @@ class DashboardPage extends StatelessWidget {
                         state.counts.length
 
                 ? state.counts[index]
-
                 : 0,
       );
     },
@@ -152,91 +187,289 @@ class DashboardPage extends StatelessWidget {
                       const SizedBox(height: 20),
 
                       // FILTER
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            "Hiring Funnel",
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              cubit.changeFilter("This Month");
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 8),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(state.selectedFilter),
-                            ),
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     const Text(
+                      //       "Hiring Funnel",
+                      //       style: TextStyle(
+                      //         fontSize: 22,
+                      //         fontWeight: FontWeight.bold,
+                      //       ),
+                      //     ),
+                      //     InkWell(
+                      //       onTap: () {
+                      //         cubit.changeFilter("This Month");
+                      //       },
+                      //       child: Container(
+                      //         padding: const EdgeInsets.symmetric(
+                      //             horizontal: 12, vertical: 8),
+                      //         decoration: BoxDecoration(
+                      //           border: Border.all(color: Colors.grey.shade300),
+                      //           borderRadius: BorderRadius.circular(10),
+                      //         ),
+                      //         child: Text(state.selectedFilter),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
 
                       const SizedBox(height: 15),
 
                       // LOADING
-                      if (state.isLoading)
-                        const Center(child: CircularProgressIndicator())
-                      else
-                        SizedBox(
-                          height: 220,
-                          child: Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children:
-    state.chartValues
-        .asMap()
-        .entries
-        .map((entry) {
+                      // if (state.isLoading)
+                      //   const Center(child: CircularProgressIndicator())
+                      // else
+//                         SizedBox(
+//                           height: 220,
+//                           child: Row(
+//                             mainAxisAlignment:
+//                                 MainAxisAlignment.spaceAround,
+//                             crossAxisAlignment: CrossAxisAlignment.end,
+//                             children:
+//     state.chartValues
+//         .asMap()
+//         .entries
+//         .map((entry) {
 
-  final labels = [
+//   final labels = [
 
-    "Applied",
+//     "Applied",
 
-    "Screening",
+//     "Screening",
 
-    "Interview",
+//     "Interview",
 
-    "Offer",
+//     "Offer",
 
-    "Hired",
-  ];
+//     "Hired",
+//   ];
 
-  return _ChartBar(
+//   return _ChartBar(
 
-    value:
-        entry.value,
+//     value:
+//         entry.value,
 
-  label:
-    entry.key < labels.length
-        ? labels[entry.key]
-        : "Unknown",
-  );
+//   label:
+//     entry.key < labels.length
+//         ? labels[entry.key]
+//         : "Unknown",
+//   );
 
-}).toList(),
+// }).toList(),
+//                           ),
+//                         ),
+
+                      const SizedBox(height: 12),
+
+                      // 📄 RECENT APPLICATIONS
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Recent Applications",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFF0F172A),
+                            ),
                           ),
+                          if (state.recentApplications.isNotEmpty)
+                            TextButton(
+                              onPressed: () {
+                                if (onTabChanged != null) onTabChanged!(2);
+                              },
+                              child: const Text(
+                                "View All",
+                                style: TextStyle(
+                                  color: Color(0xFF4F46E5),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+
+                      if (state.isLoading)
+                        const Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            child: CircularProgressIndicator(color: Color(0xFF4F46E5)),
+                          ),
+                        )
+                      else if (state.recentApplications.isEmpty)
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: const Color(0xFFE2E8F0)),
+                          ),
+                          child: Column(
+                            children: const [
+                              Icon(Icons.description_outlined, size: 40, color: Color(0xFF94A3B8)),
+                              SizedBox(height: 8),
+                              Text(
+                                "No recent applications",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF64748B),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      else
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: state.recentApplications.length,
+                          itemBuilder: (context, index) {
+                            final app = state.recentApplications[index];
+                            final partnerName = app['partner_name']?.toString();
+                            final name = (partnerName != null && partnerName.isNotEmpty && partnerName.toLowerCase() != 'false')
+                                ? partnerName
+                                : app['name']?.toString() ?? 'Unnamed Candidate';
+                            
+                            // Extract job title
+                            final jobVal = app['job_id'];
+                            final jobTitle = jobVal is List && jobVal.length > 1 
+                                ? jobVal[1].toString() 
+                                : 'General Position';
+                                
+                            // Extract stage name
+                            final stageVal = app['stage_id'];
+                            final stageName = stageVal is List && stageVal.length > 1 
+                                ? stageVal[1].toString() 
+                                : 'Applied';
+
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 12),
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: const Color(0xFFE2E8F0)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFF0F172A).withOpacity(0.02),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: const Color(0xFFEEF2FF),
+                                    radius: 20,
+                                    child: Text(
+                                      name.isNotEmpty ? name[0].toUpperCase() : 'A',
+                                      style: const TextStyle(
+                                        color: Color(0xFF4F46E5),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          name,
+                                          style: const TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w700,
+                                            color: Color(0xFF0F172A),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          jobTitle,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xFF64748B),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFEFF6FF),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      stageName,
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        color: Color(0xFF1D4ED8),
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
-
-                      const SizedBox(height: 20),
-
-                      // ElevatedButton(
-                      //   onPressed: cubit.refreshDashboard,
-                      //   child: const Text("Refresh"),
-                      // ),
+                      const SizedBox(height: 24),
                     ],
                   ),
                 );
               },
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickActionCard({
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFE2E8F0)),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF0F172A).withOpacity(0.02),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Icon(icon, size: 28, color: color),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF334155),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );
@@ -286,13 +519,9 @@ height: value <= 0
 
         /// PERCENTAGE
         Text(
-
           "${value.toInt()}",
-
           style: const TextStyle(
-
             fontWeight: FontWeight.bold,
-
             fontSize: 14,
           ),
         ),
@@ -322,54 +551,100 @@ class _Card extends StatelessWidget {
     required this.count,
   });
 
+  // IconData getIcon() {
+  //   switch (title) {
+  //     case "Open Positions":
+  //       return Icons.work_outline;
+  //     case "New Applications":
+  //       return Icons.description_outlined;
+  //     case "Interviews Today":
+  //       return Icons.calendar_today;
+  //     case "Offers Pending":
+  //       return Icons.timelapse;
+  //     case "Hired This Month":
+  //       return Icons.person;
+  //     default:
+  //       return Icons.cancel;
+  //   }
+  // }
   IconData getIcon() {
-    switch (title) {
-      case "Open Positions":
-        return Icons.work_outline;
-      case "New Applications":
-        return Icons.description_outlined;
-      case "Interviews Today":
-        return Icons.calendar_today;
-      case "Offers Pending":
-        return Icons.timelapse;
-      case "Hired This Month":
-        return Icons.person;
-      default:
-        return Icons.cancel;
-    }
-  }
+  switch (title) {
+    case "Open Positions":
+      return Icons.work_outline_rounded;
 
-  Color getColor() {
-    switch (title) {
-      case "Open Positions":
-      case "New Applications":
-        return Colors.deepPurple;
-      case "Interviews Today":
-      case "Hired This Month":
-        return Colors.green;
-      case "Offers Pending":
-        return Colors.orange;
-      default:
-        return Colors.red;
-    }
+    case "New Applications":
+      return Icons.description_outlined;
+
+    case "Candidates":
+      return Icons.groups_outlined;
+
+    default:
+      return Icons.dashboard_outlined;
   }
+}
+
+ Color getColor() {
+  switch (title) {
+    case "Open Positions":
+      return Colors.blue;
+
+    case "New Applications":
+      return Colors.orange;
+
+    case "Candidates":
+      return Colors.green;
+
+    default:
+      return Colors.grey;
+  }
+}
 @override
 Widget build(BuildContext context) {
   return Container(
     width: double.infinity,
     height: 140, // 👈 control card height
     padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      border: Border.all(color: Colors.grey.shade300),
-      borderRadius: BorderRadius.circular(18),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.shade200,
-          blurRadius: 10,
-        ),
-      ],
+ decoration: BoxDecoration(
+  color: Colors.white,
+  borderRadius: BorderRadius.circular(18),  
+  border: Border.all(
+    color: Colors.grey.shade300,
+  ),
+  boxShadow: [
+    BoxShadow(
+      color: Color(0x0D000000),
+      blurRadius: 20,
+      offset: Offset(0, 10),
     ),
+     BoxShadow(
+      color: Color(0x0D000000),
+      blurRadius: 20,
+      offset: Offset(0, 10),
+    ),
+  ],
+),
+
+//     decoration: BoxDecoration(
+//   gradient: LinearGradient(
+//     colors: [
+//       getColor().withOpacity(.15),
+//       Colors.white,
+//     ],
+//     begin: Alignment.topLeft,
+//     end: Alignment.bottomRight,
+//   ),
+//   borderRadius: BorderRadius.circular(22),
+//   border: Border.all(
+//     color: Colors.grey.shade400,
+//   ),
+//   boxShadow: [
+//     BoxShadow(
+//       color: getColor().withOpacity(.08),
+//       blurRadius: 15,
+//       offset: const Offset(0, 8),
+//     ),
+//   ],
+// ),
     child: Column(
 
   crossAxisAlignment:
@@ -402,15 +677,23 @@ Widget build(BuildContext context) {
     Row(
 
       children: [
-
-        Icon(
-
-          getIcon(),
-
-          color: getColor(),
-
-          size: 30,
-        ),
+        Container(
+  padding: const EdgeInsets.all(12),
+  decoration: BoxDecoration(
+    color: getColor().withOpacity(.15),
+    borderRadius: BorderRadius.circular(14),
+    border: Border.all(
+      color: getColor().withOpacity(.2),
+    ),
+  ),
+  child: Icon(
+    getIcon(),shadows: [Shadow(
+      color: Colors.red,
+    )],
+    color: getColor(),
+    size: 28,
+  ),
+),
 
         const SizedBox(width: 10),
 
@@ -424,7 +707,7 @@ Widget build(BuildContext context) {
             fontSize: 28,
 
             fontWeight:
-                FontWeight.bold,
+                FontWeight.w500,
           ),
         ),
       ],

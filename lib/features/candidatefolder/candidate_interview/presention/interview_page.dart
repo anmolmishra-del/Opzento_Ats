@@ -4,7 +4,7 @@ import 'package:opsento_ats/features/candidatefolder/candidate_interview/cubit/i
 import 'package:opsento_ats/features/candidatefolder/candidate_interview/state/interview_state.dart';
 
 import '../../../my_applications/cubit/my_application_cubit.dart';
-import '../../../my_applications/state/my_appication_state.dart';
+import '../../../my_applications/state/my_application_state.dart';
 
 
 class CandidateInterviewPage
