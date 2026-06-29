@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:opsento_ats/core/constants/api_config.dart';
 import 'package:opsento_ats/features/jobs/model/model_class.dart';
 import 'package:opsento_ats/features/jobs/presentaion/create_job.dart';
 import 'package:opsento_ats/features/jobs/presentaion/job_detils_page.dart';
@@ -304,156 +307,186 @@ class _JobPageState extends State<JobPage> {
                                           // 🟢 Left Accent Status Line
                                           Container(
                                             width: 5,
-                                            decoration:BoxDecoration(border: Border(
-          left: BorderSide(
-            color: Colors.primaries[job.hashCode % Colors.primaries.length],
-            width: 4,
-          ))),
+                                            decoration: BoxDecoration(
+                                              border: Border(
+                                                left: BorderSide(
+                                                  color: Colors.primaries[job.hashCode % Colors.primaries.length],
+                                                  width: 4,
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                           Expanded(
-                                            child: InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (_) => CreateJobdetailsPage(
-                                                      job: job,
-                                                      isRecruiter: widget.isRecruiter,
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(16),
-                                                child: Row(
-                                                  children: [
-                                                    // Icon avatar
-                                                    Container(
-                                                      padding: const EdgeInsets.all(12),
-                                                      decoration: BoxDecoration(
-                                                        color: const Color(0xFFEEF2FF),
-                                                        borderRadius: BorderRadius.circular(16),
-                                                      ),
-                                                      child: const Icon(
-                                                        Icons.business_center_rounded,
-                                                        color: Color(0xFF4F46E5),
-                                                        size: 24,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 16),
-                                                    // Details
-                                                    Expanded(
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Text(
-                                                            job.title,
-                                                            style: const TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight: FontWeight.w800,
-                                                              color: Color(0xFF0F172A),
-                                                            ),
-                                                            maxLines: 1,
-                                                            overflow: TextOverflow.ellipsis,
-                                                          ),
-                                                          const SizedBox(height: 4),
-                                                          Row(
-                                                            children: [
-                                                              const Icon(
-                                                                Icons.badge_outlined,
-                                                                size: 13,
-                                                                color: Color(0xFF64748B),
-                                                              ),
-                                                              const SizedBox(width: 4),
-                                                              Expanded(
-                                                                child: Text(
-                                                                  "Job Position: ${job.department}",
-                                                                  style: const TextStyle(
-                                                                    fontSize: 13,
-                                                                    color: Color(0xFF64748B),
-                                                                    fontWeight: FontWeight.w500,
-                                                                  ),
-                                                                  maxLines: 1,
-                                                                  overflow: TextOverflow.ellipsis,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          const SizedBox(height: 8),
-                                                          Wrap(
-                                                            spacing: 6,
-                                                            runSpacing: 4,
-                                                            children: [
-                                                              // Priority Badge
-                                                              _buildSmallBadge(
-                                                                icon: Icons.star_rounded,
-                                                                label: job.priority.isEmpty ? 'Medium' : job.priority,
-                                                                bgColor: _getPriorityBgColor(job.priority),
-                                                                textColor: _getPriorityTextColor(job.priority),
-                                                              ),
-                                                              // Budget Badge
-                                                              _buildSmallBadge(
-                                                                icon: Icons.monetization_on_outlined,
-                                                                label: job.salary.isEmpty ? 'N/A' : job.salary,
-                                                                bgColor: const Color(0xFFEFF6FF), // Soft blue bg
-                                                                textColor: const Color(0xFF1D4ED8), // Soft blue text
-                                                              ),
-                                                              // Published Badge
-                                                              _buildSmallBadge(
-                                                                icon: job.isPublished ? Icons.cloud_done_rounded : Icons.cloud_off_rounded,
-                                                                label: job.isPublished ? 'Published' : 'Draft',
-                                                                bgColor: job.isPublished ? const Color(0xFFECFDF5) : const Color(0xFFF1F5F9),
-                                                                textColor: job.isPublished ? const Color(0xFF047857) : const Color(0xFF475569),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 8),
-
-                                                    // Category Capsule Badge
-                                                    Container(
-                                                      padding: const EdgeInsets.symmetric(
-                                                        horizontal: 12,
-                                                        vertical: 6,
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        color: catBg,
-                                                        borderRadius: BorderRadius.circular(30),
-                                                      ),
-                                                      child: Text(
-                                                        cleanCat,
-                                                        style: TextStyle(
-                                                          color: catText,
-                                                          fontSize: 11,
-                                                          fontWeight: FontWeight.w700,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (_) => CreateJobdetailsPage(
+                                                          job: job,
+                                                          isRecruiter: widget.isRecruiter,
                                                         ),
                                                       ),
+                                                    );
+                                                  },
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(16),
+                                                    child: Row(
+                                                      children: [
+                                                        // Icon avatar
+                                                        Container(
+                                                          padding: const EdgeInsets.all(12),
+                                                          decoration: BoxDecoration(
+                                                            color: const Color(0xFFEEF2FF),
+                                                            borderRadius: BorderRadius.circular(16),
+                                                          ),
+                                                          child: const Icon(
+                                                            Icons.business_center_rounded,
+                                                            color: Color(0xFF4F46E5),
+                                                            size: 24,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(width: 16),
+                                                        // Details
+                                                        Expanded(
+                                                          child: Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [
+                                                              Text(
+                                                                job.title,
+                                                                style: const TextStyle(
+                                                                  fontSize: 16,
+                                                                  fontWeight: FontWeight.w800,
+                                                                  color: Color(0xFF0F172A),
+                                                                ),
+                                                                maxLines: 1,
+                                                                overflow: TextOverflow.ellipsis,
+                                                              ),
+                                                              const SizedBox(height: 4),
+                                                              Row(
+                                                                children: [
+                                                                  const Icon(
+                                                                    Icons.badge_outlined,
+                                                                    size: 13,
+                                                                    color: Color(0xFF64748B),
+                                                                  ),
+                                                                  const SizedBox(width: 4),
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                      "Job Position: ${job.department}",
+                                                                      style: const TextStyle(
+                                                                        fontSize: 13,
+                                                                        color: Color(0xFF64748B),
+                                                                        fontWeight: FontWeight.w500,
+                                                                      ),
+                                                                      maxLines: 1,
+                                                                      overflow: TextOverflow.ellipsis,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              const SizedBox(height: 8),
+                                                              Wrap(
+                                                                spacing: 6,
+                                                                runSpacing: 4,
+                                                                children: [
+                                                                  // Priority Badge
+                                                                  _buildSmallBadge(
+                                                                    icon: Icons.star_rounded,
+                                                                    label: job.priority.isEmpty ? 'Medium' : job.priority,
+                                                                    bgColor: _getPriorityBgColor(job.priority),
+                                                                    textColor: _getPriorityTextColor(job.priority),
+                                                                  ),
+                                                                  // Budget Badge
+                                                                  _buildSmallBadge(
+                                                                    icon: Icons.monetization_on_outlined,
+                                                                    label: job.salary.isEmpty ? 'N/A' : job.salary,
+                                                                    bgColor: const Color(0xFFEFF6FF), // Soft blue bg
+                                                                    textColor: const Color(0xFF1D4ED8), // Soft blue text
+                                                                  ),
+                                                                  // Published Badge
+                                                                  _buildSmallBadge(
+                                                                    icon: job.isPublished ? Icons.cloud_done_rounded : Icons.cloud_off_rounded,
+                                                                    label: job.isPublished ? 'Published' : 'Draft',
+                                                                    bgColor: job.isPublished ? const Color(0xFFECFDF5) : const Color(0xFFF1F5F9),
+                                                                    textColor: job.isPublished ? const Color(0xFF047857) : const Color(0xFF475569),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        const SizedBox(width: 8),
+                                                        // Category Capsule Badge
+                                                        Container(
+                                                          padding: const EdgeInsets.symmetric(
+                                                            horizontal: 12,
+                                                            vertical: 6,
+                                                          ),
+                                                          decoration: BoxDecoration(
+                                                            color: catBg,
+                                                            borderRadius: BorderRadius.circular(30),
+                                                          ),
+                                                          child: Text(
+                                                            cleanCat,
+                                                            style: TextStyle(
+                                                              color: catText,
+                                                              fontSize: 11,
+                                                              fontWeight: FontWeight.w700,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ],
+                                                  ),
                                                 ),
-
-                                              ),
-
+                                                const Divider(height: 1, color: Color(0xFFE2E8F0)),
+                                                Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    children: [
+                                                      TextButton.icon(
+                                                        style: TextButton.styleFrom(
+                                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        ),
+                                                        onPressed: () {
+                                                          final jobUrl = "${ApiConfig.baseUrl}/jobs/detail/${job.id}";
+                                                          Share.share(jobUrl, subject: job.title);
+                                                        },
+                                                        icon: const Icon(Icons.share_rounded, size: 14, color: Color(0xFF0284C7)),
+                                                        label: const Text(
+                                                          "Job Page",
+                                                          style: TextStyle(
+                                                            color: Color(0xFF0284C7),
+                                                            fontWeight: FontWeight.w800,
+                                                            fontSize: 12,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          
                                           ),
-                                        
                                         ],
-                                        
                                       ),
-                                      
                                     ),
                                   ),
                                 );
                                 
                               },
-                            ),
-                          ),
+                            
+                          
                   ),
-                ],
+               ) ,
+              )],
               );
             },
           ),
@@ -494,7 +527,7 @@ class _JobPageState extends State<JobPage> {
       ),
     );
   }
-}
+
 
 
 //   void _showCreateJobModal(BuildContext context, {JobData? job}) {
@@ -841,3 +874,4 @@ class _JobPageState extends State<JobPage> {
 //           );
 //   }
 // }
+}

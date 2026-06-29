@@ -22,9 +22,10 @@ class _RecruiterMainLayoutState extends State<RecruiterMainLayout> {
     super.initState();
     _checkAuth();
     
-    // Initialize pages here to ensure they're created fresh
     pages = [
-      DashboardPage(),
+      DashboardPage(onTabChanged: (index) {
+        onTabChanged(index);
+      }),
       JobPage(isRecruiter: true),
       ApplicationsListPage(),
       CandidatePage(),
@@ -76,11 +77,11 @@ class _RecruiterMainLayoutState extends State<RecruiterMainLayout> {
 
   Widget _buildBottomNav() {
     return Container(
-      margin: const EdgeInsets.fromLTRB(0, 0, 0, 25),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         color: Colors.white,
-        // borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
             color: Colors.indigo.withValues(alpha: 0.12),

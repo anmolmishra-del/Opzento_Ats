@@ -6,7 +6,8 @@ import '../cubit/dashboard_cubit.dart';
 import '../state/dashboard_state.dart';
 
 class DashboardPage extends StatelessWidget {
-  const DashboardPage({super.key});
+  final ValueChanged<int>? onTabChanged;
+  const DashboardPage({super.key, this.onTabChanged});
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -24,89 +25,86 @@ class DashboardPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // TOP BAR
+                       // TOP BAR
                       Container(
-                         padding: const EdgeInsets.all(15),
-decoration: BoxDecoration(
-  color: Colors.white,
-  borderRadius: BorderRadius.circular(18),
-  border: Border.all(
-    color: Colors.grey.shade200,
-  ),
-  
-  boxShadow: [
-    BoxShadow(
-      color: Color(0x0D000000),
-      blurRadius: 20,
-      offset: Offset(0, 10),
-    ),
-     BoxShadow(
-      color: Color(0x0D000000),
-      blurRadius: 20,
-      offset: Offset(0, 10),
-    ),
-  ],
-),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF4F46E5), Color(0xFF6366F1)], // Premium Indigo to Violet gradient
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF4F46E5).withOpacity(0.25),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
                         child: Row(
                           children: [
-                            const CircleAvatar(radius: 18),
-                            const SizedBox(width: 10),
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+                              ),
+                              child: CircleAvatar(
+                                radius: 20,
+                                backgroundColor: Colors.white.withOpacity(0.2),
+                                child: Text(
+                                  state.name.isNotEmpty ? state.name[0].toUpperCase() : 'S',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 14),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
-                                      const Text(
+                                      Text(
                                         "Hello",
                                         style: TextStyle(
-                                          color: Colors.grey,
-                                          
+                                          color: Colors.white.withOpacity(0.8),
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
                                         ),
-                                        
                                       ),
-                                        SizedBox(width: 5),
-        Icon(
-          Icons.waving_hand,
-          color: Colors.orange,
-          size: 18,
-        ),
+                                      const SizedBox(width: 4),
+                                      const Icon(
+                                        Icons.waving_hand_rounded,
+                                        color: Color(0xFFFFB020),
+                                        size: 16,
+                                      ),
                                     ],
                                   ),
-          //                         SizedBox(width: 4),
-          //                           Icon(
-          //   Icons.waving_hand,
-          //   color: Colors.orange,
-          //   size: 18,
-          // ),
-                                FittedBox(
-  fit: BoxFit.scaleDown,
-  alignment: Alignment.centerLeft,
-  child: Text(
-    state.name,
-    style: const TextStyle(
-      fontSize: 16,
-      
-      fontWeight: FontWeight.w500,
-    ),
-  ),
-)
+                                  const SizedBox(height: 2),
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      state.name,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.white,
+                                        letterSpacing: -0.2,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                            const Spacer(),
-                            // IconButton(
-                            //   icon: const Icon(Icons.notifications_none, size: 28),
-                            //   onPressed: () {
-                            //     Navigator.of(context).push(
-                            //       MaterialPageRoute(
-                            //         builder: (_) => const NotificationsPage(),
-                            //       ),
-                            //     );
-                            //   },
-                            // ),
                             IconButton(
-                              icon: const Icon(Icons.person_outline, size: 28),
+                              icon: const Icon(Icons.person_outline_rounded, size: 26, color: Colors.white),
                               onPressed: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
@@ -262,13 +260,216 @@ decoration: BoxDecoration(
 //                           ),
 //                         ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 12),
+
+                      // 📄 RECENT APPLICATIONS
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Recent Applications",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFF0F172A),
+                            ),
+                          ),
+                          if (state.recentApplications.isNotEmpty)
+                            TextButton(
+                              onPressed: () {
+                                if (onTabChanged != null) onTabChanged!(2);
+                              },
+                              child: const Text(
+                                "View All",
+                                style: TextStyle(
+                                  color: Color(0xFF4F46E5),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+
+                      if (state.isLoading)
+                        const Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            child: CircularProgressIndicator(color: Color(0xFF4F46E5)),
+                          ),
+                        )
+                      else if (state.recentApplications.isEmpty)
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: const Color(0xFFE2E8F0)),
+                          ),
+                          child: Column(
+                            children: const [
+                              Icon(Icons.description_outlined, size: 40, color: Color(0xFF94A3B8)),
+                              SizedBox(height: 8),
+                              Text(
+                                "No recent applications",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF64748B),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      else
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: state.recentApplications.length,
+                          itemBuilder: (context, index) {
+                            final app = state.recentApplications[index];
+                            final partnerName = app['partner_name']?.toString();
+                            final name = (partnerName != null && partnerName.isNotEmpty && partnerName.toLowerCase() != 'false')
+                                ? partnerName
+                                : app['name']?.toString() ?? 'Unnamed Candidate';
+                            
+                            // Extract job title
+                            final jobVal = app['job_id'];
+                            final jobTitle = jobVal is List && jobVal.length > 1 
+                                ? jobVal[1].toString() 
+                                : 'General Position';
+                                
+                            // Extract stage name
+                            final stageVal = app['stage_id'];
+                            final stageName = stageVal is List && stageVal.length > 1 
+                                ? stageVal[1].toString() 
+                                : 'Applied';
+
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 12),
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: const Color(0xFFE2E8F0)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFF0F172A).withOpacity(0.02),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: const Color(0xFFEEF2FF),
+                                    radius: 20,
+                                    child: Text(
+                                      name.isNotEmpty ? name[0].toUpperCase() : 'A',
+                                      style: const TextStyle(
+                                        color: Color(0xFF4F46E5),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          name,
+                                          style: const TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w700,
+                                            color: Color(0xFF0F172A),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          jobTitle,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xFF64748B),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFEFF6FF),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      stageName,
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        color: Color(0xFF1D4ED8),
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      const SizedBox(height: 24),
                     ],
                   ),
                 );
               },
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickActionCard({
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFE2E8F0)),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF0F172A).withOpacity(0.02),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Icon(icon, size: 28, color: color),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF334155),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );

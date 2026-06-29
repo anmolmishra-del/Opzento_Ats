@@ -3,6 +3,8 @@ import 'package:opsento_ats/features/jobs/model/model_class.dart';
 import 'package:opsento_ats/features/jobs/repository/create_job_servic.dart';
 import 'package:opsento_ats/features/jobs/repository/hr_job_service file.dart';
 
+import 'package:opsento_ats/core/services/odoo_service.dart';
+import 'package:opsento_ats/core/constants/api_config.dart';
 import '../state/job_state.dart';
 
 class JobCubit extends Cubit<JobState> {
@@ -83,6 +85,63 @@ class JobCubit extends Cubit<JobState> {
       emit(state.copyWith(
         jobs: updatedJobs,
       ));
+    }
+  }
+
+  Future<void> togglePublishStatus(JobData job) async {
+    final updatedIsPublished = !job.isPublished;
+    
+    final newJob = JobData(
+      id: job.id,
+      jobId: job.jobId,
+      title: job.title,
+      department: job.department,
+      category: job.category,
+      experience: job.experience,
+      primarySkills: job.primarySkills,
+      secondarySkills: job.secondarySkills,
+      location: job.location,
+      salary: job.salary,
+      type: job.type,
+      status: job.status,
+      newCount: job.newCount,
+      description: job.description,
+      responsibilities: job.responsibilities,
+      requirements: job.requirements,
+      isPublished: updatedIsPublished,
+      priority: job.priority,
+      company: job.company,
+      noOfRecruitment: job.noOfRecruitment,
+      noOfEligibleSubmissions: job.noOfEligibleSubmissions,
+    );
+    
+    updateJob(job, newJob);
+
+    try {
+      final odoo = OdooService(ApiConfig.baseUrl);
+      
+      if (job.id != null) {
+        try {
+          await odoo.executeModelMethod(
+            'hr.job.recruitment',
+            'write',
+            [[job.id], {'is_published': updatedIsPublished, 'website_published': updatedIsPublished}],
+          );
+        } catch (_) {}
+      }
+      
+      if (job.jobId != null) {
+        try {
+          await odoo.executeModelMethod(
+            'hr.job',
+            'write',
+            [[job.jobId], {'website_published': updatedIsPublished}],
+          );
+        } catch (_) {}
+      }
+    } catch (e) {
+      print("Failed to sync publish status to Odoo: $e");
+      updateJob(newJob, job);
     }
   }
 }

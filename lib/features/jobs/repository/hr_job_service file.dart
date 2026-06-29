@@ -437,6 +437,12 @@ class HrJobService {
 
               final title = data['name']?.toString() ?? _extractName(data['job_id']);
               final jobPositionName = _extractName(data['job_id']);
+              int? jobIdVal;
+              if (data['job_id'] is List && (data['job_id'] as List).isNotEmpty) {
+                jobIdVal = data['job_id'][0] as int?;
+              } else if (data['job_id'] is int) {
+                jobIdVal = data['job_id'] as int;
+              }
               final dept = jobPositionName.isNotEmpty && jobPositionName != 'N/A' ? jobPositionName : 'N/A';
               final categoryName = _extractName(data['job_category']);
               final experience = data['experience'] != null ? _extractName(data['experience']) : 'Not specified';
@@ -536,6 +542,7 @@ class HrJobService {
 
               return JobData(
                 id: data['id'] as int?,
+                jobId: jobIdVal,
                 title: title,
                 department: dept,
                 category: categoryName,
